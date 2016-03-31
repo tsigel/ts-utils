@@ -12,7 +12,7 @@ module utils.filters {
         (data: P): R;
     }
     
-    export interface IEmptyFilterOptiions {
+    export interface IEmptyFilterOptions {
         skipNumber?: boolean;
         skipString?: boolean;
         skipNotEmpty?: boolean;
@@ -36,7 +36,7 @@ module utils.filters {
         }
     }
     
-    export function empty<T>(options?: IEmptyFilterOptiions): IFilter<T, boolean> {
+    export function empty<T>(options?: IEmptyFilterOptions): IFilter<T, boolean> {
         
         if (!options) {
             return Boolean;

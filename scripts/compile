@@ -15,11 +15,3 @@ echo 'compile karma.conf.ts >> DONE'
 echo 'compile gulpfile.ts'
 node node_modules/typescript/bin/tsc ./gulpfile.ts -m commonjs
 echo 'compile gulpfile.ts >> DONE'
-
-echo 'compile min'
-node node_modules/gulp/bin/gulp.js minify
-echo 'compile min >> DONE'
-
-echo 'compile coverage'
-node node_modules/gulp/bin/gulp.js addCoverageIgnore
-echo 'compile coverage >> DONE'

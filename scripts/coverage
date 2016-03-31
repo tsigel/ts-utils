@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo 'compile coverage'
+node node_modules/gulp/bin/gulp.js addCoverageIgnore
+echo 'compile coverage >> DONE'

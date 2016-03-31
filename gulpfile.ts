@@ -6,7 +6,7 @@ import childProcess = require('child_process');
 import rename = require('gulp-rename');
 import fs = require('fs');
 
-gulp.task('minify', () => {
+gulp.task('uglify', () => {
     
     return gulp.src('./dist/utils.js')
         .pipe(uglify())
