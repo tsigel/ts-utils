@@ -1,0 +1,8 @@
+coverage
+node_modules
+typings
+.idea
+gulpfile.js
+karma.conf.js
+test/*.js
+test/*.map
