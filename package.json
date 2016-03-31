@@ -6,9 +6,7 @@
     "install_typings": "node node_modules/tsd/build/cli.js install",
     "postinstall": "npm run install_typings && sh scripts/copy && npm run test",
     "pretest": "npm run compile",
-    "test": "node_modules/karma/bin/karma start",
-    "minify": "node node_modules/gulp/bin/gulp.js minify",
-    "minify_test": "npm run compile && npm run minify && node_modules/karma/bin/karma start"
+    "test": "node_modules/karma/bin/karma start"
   },
   "description": "",
   "main": "dist/utils.js",

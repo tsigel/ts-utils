@@ -7,7 +7,7 @@ node node_modules/tslint/bin/tslint src/*.ts || exit 1
 echo 'tslint =>> ok'
 
 echo 'run tests'
-npm run minify_test || exit 1
+npm run test || exit 1
 echo 'test =>> ok'
 
 exit 0
