@@ -1,0 +1,8 @@
+node_modules
+.idea
+dist
+typings
+**/*.js
+**/*.map
+/coverage
+npm-debug.log

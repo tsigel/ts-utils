@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "out": "dist/utils.js",
+    "sourceMap": true,
+    "target": "es5",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true
+  },
+  "exclude": [
+    "dist",
+    "karma.conf.ts",
+    "test",
+    "node_modules",
+    "gulpfile.ts"
+  ]
+}

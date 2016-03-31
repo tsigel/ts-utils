@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo 'clean dist'
+rm -r dist
+echo 'clean dist >> DONE'
+
+echo 'clean test'
+rm test/*.js
+rm test/*.map
+echo 'clean test >> DONE'
+
+echo 'clean coverage'
+rm -r coverage
+echo 'clean coverage >> DONE'
