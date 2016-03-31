@@ -21,6 +21,15 @@ describe('utils', () => {
         expect(utils.isEmpty('')).to.be(false);
         
     });
+    
+    it('isNotEmpty', () => {
+        
+        expect(utils.isNotEmpty(null)).to.be(false);
+        expect(utils.isNotEmpty(undefined)).to.be(false);
+        expect(utils.isNotEmpty(0)).to.be(true);
+        expect(utils.isNotEmpty('')).to.be(true);
+        
+    });
 
     it('isNumber', () => {
 
@@ -75,6 +84,17 @@ describe('utils', () => {
         expect(utils.isNaN(null)).to.be(false);
         expect(utils.isNaN(0)).to.be(false);
         
+    });
+
+    it('isFunction', () => {
+
+        /* tslint:disable */
+        expect(utils.isFunction(function (): void {})).to.be(true);
+        /* tslint:enable */
+        expect(utils.isFunction(null)).to.be(false);
+        expect(utils.isFunction({})).to.be(false);
+        expect(utils.isFunction([])).to.be(false);
+
     });
     
     describe('each', () => {

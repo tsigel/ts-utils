@@ -18,7 +18,7 @@ module.exports = function(config: any): void {
         files: [
             './node_modules/phantomjs-polyfill/bind-polyfill.js',
             './node_modules/expect.js/index.js',
-            'dist/utils.js',
+            'dist/utils.coverage.js',
             'test/*.js'
         ],
 

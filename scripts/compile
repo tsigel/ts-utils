@@ -5,7 +5,7 @@ node node_modules/typescript/bin/tsc -p ./
 echo 'compile src >> DONE'
 
 echo 'compile test'
-node node_modules/typescript/bin/tsc ./test/*.ts
+node node_modules/typescript/bin/tsc ./test/*.ts --sourceMap
 echo 'compile test >> DONE'
 
 echo 'compile karma.conf.ts'

@@ -9,6 +9,10 @@ module utils {
         return some == null;
     }
     
+    export function isNotEmpty(some: any): boolean {
+        return some != null;
+    }
+    
     export function isString(some: any): boolean {
         return typeof some === 'string' || (!isEmpty(some) && some.constructor === String);
     }
@@ -31,6 +35,10 @@ module utils {
     
     export function isNaN(some: any): boolean {
         return isNumber(some) && (<any>window).isNaN(some);
+    }
+    
+    export function isFunction(some: any): boolean {
+        return typeof some === 'function';
     }
     
     export function each<T>(some: Object, callback: IEachCallback<T>, context?: any): void {
