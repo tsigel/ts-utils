@@ -2,7 +2,6 @@
 ///<reference path="../dist/utils.d.ts"/>
 
 
-import interfaceElement = ts.ScriptElementKind.interfaceElement;
 describe('filters', () => {
     
     describe('not', () => {
