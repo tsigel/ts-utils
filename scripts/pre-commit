@@ -4,6 +4,7 @@ echo 'pre commit hook'
 
 echo 'check tslint'
 node node_modules/tslint/bin/tslint src/*.ts || exit 1
+node node_modules/tslint/bin/tslint test/*.ts || exit 1
 echo 'tslint =>> ok'
 
 echo 'run tests'

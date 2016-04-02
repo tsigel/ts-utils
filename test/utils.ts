@@ -1,101 +1,108 @@
 ///<reference path="../typings/tsd.d.ts"/>
 ///<reference path="../dist/utils.d.ts"/>
 
+/* tslint:disable */
+new TestManager([
+    {
+        testName: 'utils',
+        children: [
+            {
+                testName: 'isObject',
+                testCallback: utils.isObject,
+                trueValues: [{}, {a: 1}, new TestManager([])],
+                falseValues: [null, 1, '1', new String('1'), new Number(1), [], undefined, utils.each]
+            },
+            {
+                testName: 'isEmpty',
+                testCallback: utils.isEmpty,
+                trueValues: [null, undefined],
+                falseValues: [{}, [], 0, '', new String('1'), new Number(1)]
+            },
+            {
+                testName: 'isNotEmpty',
+                testCallback: utils.isNotEmpty,
+                trueValues: [{}, [], 0, '', new String('1'), new Number(1)],
+                falseValues: [null, undefined]
+            },
+            {
+                testName: 'isNumber',
+                testCallback: utils.isNumber,
+                trueValues: [0, NaN, new Number(0), new Number(NaN)],
+                falseValues: ['0', {}, [], null, undefined]
+            },
+            {
+                testName: 'isString',
+                testCallback: utils.isString,
+                trueValues: ['', new String(''), '1'],
+                falseValues: [0, 1, {}, [], null, undefined]
+            },
+            {
+                testName: 'isArray',
+                testCallback: utils.isArray,
+                trueValues: [[], new Array()],
+                falseValues: [{}, 0, '', new String('1'), new Number(1)]
+            },
+            {
+                testName: 'isNull',
+                testCallback: utils.isNull,
+                trueValues: [null],
+                falseValues: [{}, 0, '', new String('1'), new Number(1), undefined]
+            },
+            {
+                testName: 'isUndefined',
+                testCallback: utils.isUndefined,
+                trueValues: [undefined],
+                falseValues: [{}, 0, '', new String('1'), new Number(1), null]
+            },
+            {
+                testName: 'isNaN',
+                testCallback: utils.isNaN,
+                trueValues: [NaN, new Number(NaN)],
+                falseValues: ['0', 0, new Number(0), {}, [], null, undefined]
+            },
+            {
+                testName: 'isFunction',
+                testCallback: utils.isFunction,
+                trueValues: [new Function(), utils.each],
+                falseValues: ['0', 0, new Number(0), {}, [], null, undefined]
+            },
+            {
+                testName: 'find',
+                children: [
+                    {
+                        testName: 'by Array',
+                        testCallback: (data: any): any => {
+                            return utils.find(data, {id: 1}) !== null;
+                        },
+                        trueValues: [[0, {id: 1}]],
+                        falseValues: [[0,1,2]]
+                    },
+                    {
+                        testName: 'by Object',
+                        testCallback: (data: any): any => {
+                            return utils.find(data, {id: 1}) !== null;
+                        },
+                        trueValues: [{a: {id: 2}, b: {id: 1}}],
+                        falseValues: [{a: {id: 2}, b: {id: 3}}]
+                    },
+                    {
+                        testName: 'with custom filter',
+                        testCallback: (data: any): any => {
+                            return utils.find(data, (some: any) => {
+                                return some.id === 2;
+                            }) !== null;
+                        },
+                        trueValues: [[{}, {id: 2}], {a: {id: 2}, b: {id: 1}}],
+                        falseValues: [[{}, {id: 1}], {a: {id: 3}, b: {id: 1}}]
+                    }
+                ]
+            }
+        ]
+    }
+]);
+/* tslint:enable */
 
 describe('utils', () => {
-    
-    it('isObject', () => {
-        
-        expect(utils.isObject({})).to.be(true);
-        expect(utils.isObject([])).to.be(false);
-        expect(utils.isObject(null)).to.be(false);
-        expect(utils.isObject(1)).to.be(false);
-        
-    });
-    
-    it('isEmpty', () => {
-        
-        expect(utils.isEmpty(null)).to.be(true);
-        expect(utils.isEmpty(undefined)).to.be(true);
-        expect(utils.isEmpty(0)).to.be(false);
-        expect(utils.isEmpty('')).to.be(false);
-        
-    });
-    
-    it('isNotEmpty', () => {
-        
-        expect(utils.isNotEmpty(null)).to.be(false);
-        expect(utils.isNotEmpty(undefined)).to.be(false);
-        expect(utils.isNotEmpty(0)).to.be(true);
-        expect(utils.isNotEmpty('')).to.be(true);
-        
-    });
-
-    it('isNumber', () => {
-
-        expect(utils.isNumber(1)).to.be(true);
-        expect(utils.isNumber(1)).to.be(true);
-        /* tslint:disable */
-        expect(utils.isNumber(new Number(1))).to.be(true);
-        /* tslint:enable */
-        expect(utils.isNumber('1')).to.be(false);
-
-    });
-
-    it('isString', () => {
-
-        expect(utils.isString('1')).to.be(true);
-        expect(utils.isString('')).to.be(true);
-        /* tslint:disable */
-        expect(utils.isString(new String('1'))).to.be(true);
-        /* tslint:enable */
-        expect(utils.isString(1)).to.be(false);
-
-    });
-    
-    it('isArray', () => {
-
-        expect(utils.isArray([])).to.be(true);
-        expect(utils.isArray({})).to.be(false);
-        
-    });
-
-    it('isNull', () => {
-
-        expect(utils.isNull(null)).to.be(true);
-        expect(utils.isNull(undefined)).to.be(false);
-        expect(utils.isNull(0)).to.be(false);
-        expect(utils.isNull('')).to.be(false);
-
-    });
-
-    it('isUndefined', () => {
-
-        expect(utils.isUndefined(undefined)).to.be(true);
-        expect(utils.isUndefined(null)).to.be(false);
-        expect(utils.isUndefined(0)).to.be(false);
-        expect(utils.isUndefined('')).to.be(false);
-
-    });
-    
-    it('isNaN', () => {
-
-        expect(utils.isNaN(NaN)).to.be(true);
-        expect(utils.isNaN(null)).to.be(false);
-        expect(utils.isNaN(0)).to.be(false);
-        
-    });
-
-    it('isFunction', () => {
-
-        /* tslint:disable */
-        expect(utils.isFunction(function (): void {})).to.be(true);
-        /* tslint:enable */
-        expect(utils.isFunction(null)).to.be(false);
-        expect(utils.isFunction({})).to.be(false);
-        expect(utils.isFunction([])).to.be(false);
-
-    });
     
     describe('each', () => {
         

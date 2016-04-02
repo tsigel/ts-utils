@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
 echo 'compile src'
-node node_modules/typescript/bin/tsc -p ./
+node node_modules/typescript/bin/tsc -p ./ || exit 1
 echo 'compile src >> DONE'
 
 echo 'compile test'
-node node_modules/typescript/bin/tsc ./test/*.ts --sourceMap
+node node_modules/typescript/bin/tsc ./test/*.ts --sourceMap || exit 1
 echo 'compile test >> DONE'
 
 echo 'compile karma.conf.ts'
-node node_modules/typescript/bin/tsc ./karma.conf.ts
+node node_modules/typescript/bin/tsc ./karma.conf.ts || exit 1
 echo 'compile karma.conf.ts >> DONE'
 
 echo 'compile gulpfile.ts'
-node node_modules/typescript/bin/tsc ./gulpfile.ts -m commonjs
+node node_modules/typescript/bin/tsc ./gulpfile.ts -m commonjs || exit 1
 echo 'compile gulpfile.ts >> DONE'

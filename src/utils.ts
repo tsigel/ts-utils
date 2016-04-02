@@ -1,8 +1,17 @@
 module utils {
     'use strict';
+    
+    const types = {
+        string: '[object String]',
+        number: '[object Number]',
+        object: '[object Object]',
+        array: '[object Array]'
+    };
+    
+    const toString = Object.prototype.toString;
 
     export function isObject(some: any): boolean {
-        return typeof some === 'object' && !isNull(some) && !Array.isArray(some);
+        return toString.call(some) === types.object;
     }
     
     export function isEmpty(some: any): boolean {
@@ -14,15 +23,15 @@ module utils {
     }
     
     export function isString(some: any): boolean {
-        return typeof some === 'string' || (!isEmpty(some) && some.constructor === String);
+        return toString.call(some) === types.string;
     }
     
     export function isNumber(some: any): boolean {
-        return typeof some === 'number' || (!isEmpty(some) && some.constructor === Number);
+        return toString.call(some) === types.number;
     }
     
     export function isArray(some: any): boolean {
-        return Array.isArray(some);
+        return toString.call(some) === types.array; 
     }
     
     export function isNull(some: any): boolean {
