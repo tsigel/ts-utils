@@ -111,6 +111,17 @@ describe('utils', () => {
         
     });
     
+    it('some', () => {
+        
+        let data = {
+            a: 1,
+            b: 2
+        };
+        
+        expect(utils.some(data, (value: any, key: string) => value === 2 && key === 'b')).to.be(true);
+        
+    });
+    
     describe('each', () => {
         
         let data = {

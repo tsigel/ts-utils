@@ -69,6 +69,14 @@ module utils {
         }
     }
     
+    export function some<T>(some: Object, callback: ISomeCallback<T>): boolean {
+        return Object.keys(some).some((key: string) => callback(some[key], key));
+    }
+    
+    export interface ISomeCallback<T> {
+        (data?: T, key?: string): boolean;
+    }
+    
     export interface IEachCallback<T> {
         (data?: T, key?: string): any;
     }
