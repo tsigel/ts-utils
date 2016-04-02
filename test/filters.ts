@@ -196,3 +196,23 @@ new TestManager([
     }
 ]);
 /* tslint:enable */
+
+describe('filters', () => {
+
+    let stamp = 1459603645801;
+    let date = new Date(stamp);
+    let pattern = 'YYYY YY MM M DD D hh h mm m ss s';
+    let result = '2016 16 04 4 02 2 16 16 27 27 25 25';
+
+    it('date', () => {
+
+        let filter = utils.filters.date(pattern);
+        let myFilter = utils.filters.date('DD.MM.YYYY hh:mm:ss');
+
+        expect(filter(stamp)).to.be(result);
+        expect(filter(date)).to.be(result);
+        expect(myFilter(stamp)).to.be('02.04.2016 16:27:25');
+
+    });
+
+});

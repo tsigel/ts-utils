@@ -104,6 +104,13 @@ new TestManager([
 
 describe('utils', () => {
     
+    it('numToLength', () => {
+       
+        expect(utils.numToLength(1, 2)).to.be('01');
+        expect(utils.numToLength(12, 2)).to.be('12');
+        
+    });
+    
     describe('each', () => {
         
         let data = {

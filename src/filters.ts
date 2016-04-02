@@ -115,5 +115,78 @@ module utils.filters {
     export function notEqual<T>(some: T, noStrict?: boolean): IFilter<T, boolean> {
         return not(equal(some, noStrict));
     }
+    
+    let dateParsers = [
+        {
+            pattern: 'YYYY',
+            handler: (date: Date): string => String(date.getFullYear())
+        },
+        {
+            pattern: 'YY',
+            handler: (date: Date): string => String(date.getFullYear()).substr(2)
+        },
+        {
+            pattern: 'MM',
+            handler: (date: Date): string => String(numToLength(date.getMonth() + 1, 2))
+        },
+        {
+            pattern: 'M',
+            handler: (date: Date): string => String(date.getMonth() + 1)
+        },
+        {
+            pattern: 'DD',
+            handler: (date: Date): string => String(numToLength(date.getDate(), 2))
+        },
+        {
+            pattern: 'D',
+            handler: (date: Date): string => String(date.getDate())
+        },
+        {
+            pattern: 'hh',
+            handler: (date: Date): string => String(numToLength(date.getHours(), 2))
+        },
+        {
+            pattern: 'h',
+            handler: (date: Date): string => String(date.getHours())
+        },
+        {
+            pattern: 'mm',
+            handler: (date: Date): string => String(numToLength(date.getMinutes(), 2))
+        },
+        {
+            pattern: 'm',
+            handler: (date: Date): string => String(date.getMinutes())
+        },
+        {
+            pattern: 'ss',
+            handler: (date: Date): string => String(numToLength(date.getSeconds(), 2))
+        },
+        {
+            pattern: 's',
+            handler: (date: Date): string => String(date.getSeconds())
+        }
+    ];
+    
+    interface IDatePattern {
+        pattern: string;
+        handler: (date: Date) => string;
+    }
+    
+    export function date(pattern: string): IFilter<Date|number, string> {
+        let localPatterns = [];
+        let forFind = pattern;
+        dateParsers.forEach((datePattern: IDatePattern) => {
+            if (forFind.indexOf(datePattern.pattern) !== -1) {
+                forFind = forFind.replace(datePattern.pattern, '');
+                localPatterns.push(datePattern);
+            }
+        });
+        return (date: Date|number): string => {
+            let _date = isNumber(date) ? new Date(<number>date) : <Date>date;
+            return localPatterns.reduce((result: string, datePattern: IDatePattern) => {
+                return result.replace(datePattern.pattern, datePattern.handler(_date));
+            }, pattern);
+        };
+    }
 
 }

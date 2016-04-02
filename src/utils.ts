@@ -49,6 +49,14 @@ module utils {
     export function isFunction(some: any): boolean {
         return typeof some === 'function';
     }
+
+    export function numToLength(num: number, length: number): string {
+        let str = String(num);
+        for (let i = str.length; i < length; i++) {
+            str = '0' + str;
+        }
+        return str;
+    }
     
     export function each<T>(some: Object, callback: IEachCallback<T>, context?: any): void {
         if (!isObject(some)) {
