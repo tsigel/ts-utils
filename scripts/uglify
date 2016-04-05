@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-echo 'compile min'
-node node_modules/gulp/bin/gulp.js uglify
-echo 'compile min >> DONE'
+#echo 'compile min'
+#node node_modules/gulp/bin/gulp.js uglify
+#echo 'compile min >> DONE'
