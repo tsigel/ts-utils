@@ -204,15 +204,29 @@ describe('filters', () => {
     let pattern = 'YYYY YY MM M DD D hh h mm m ss s';
     let result = '2016 16 04 4 02 2 16 16 27 27 25 25';
 
-    it('date', () => {
+    describe('date', () => {
+        
+        it('without processor', () => {
 
-        let filter = utils.filters.date(pattern);
-        let myFilter = utils.filters.date('DD.MM.YYYY hh:mm:ss');
+            let filter = utils.filters.date(pattern);
+            let myFilter = utils.filters.date('DD.MM.YYYY hh:mm:ss');
 
-        expect(filter(stamp)).to.be(result);
-        expect(filter(date)).to.be(result);
-        expect(myFilter(stamp)).to.be('02.04.2016 16:27:25');
+            expect(filter(stamp)).to.be(result);
+            expect(filter(date)).to.be(result);
+            expect(myFilter(stamp)).to.be('02.04.2016 16:27:25');
 
+        });
+        
+        it('with processor', () => {
+            
+            let filter = utils.filters.date(pattern, (state: boolean) => {
+                return state ? date : stamp;
+            });
+
+            expect(filter(1)).to.be(result);
+            expect(filter(0)).to.be(result);
+            
+        });
     });
 
 });
