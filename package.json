@@ -1,12 +1,12 @@
 {
   "name": "ts-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "compile": "sh scripts/clean && sh scripts/compile",
     "install_typings": "node node_modules/tsd/build/cli.js install",
     "postinstall": "npm run install_typings && sh scripts/copy && npm run test",
     "pretest": "npm run compile && sh scripts/coverage",
-    "prepablush": "npm run test",
+    "prepublush": "npm run test",
     "test": "node_modules/karma/bin/karma start"
   },
   "description": "",
