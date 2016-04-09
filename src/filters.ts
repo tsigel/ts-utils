@@ -172,21 +172,39 @@ module utils.filters {
         handler: (date: Date) => string;
     }
     
-    export function date(pattern: string): IFilter<Date|number, string> {
+    export function date(pattern: string, processor?: IFilter<any, Date|number>): IFilter<any, string> {
         let localPatterns = [];
         let forFind = pattern;
+        let parse;
         dateParsers.forEach((datePattern: IDatePattern) => {
             if (forFind.indexOf(datePattern.pattern) !== -1) {
                 forFind = forFind.replace(datePattern.pattern, '');
                 localPatterns.push(datePattern);
             }
         });
-        return (date: Date|number): string => {
-            let _date = isNumber(date) ? new Date(<number>date) : <Date>date;
+        if (processor) {
+            parse = (toParse: any) => {
+                let result = processor(toParse);
+                return isNumber(result) ? new Date(<number>result) : <Date>result;
+            };
+        } else {
+            parse = (data: Date|number) => {
+                return isNumber(data) ? new Date(<number>data) : <Date>data;
+            };
+        }
+        return (date: any): string => {
+            let _date = parse(date);
             return localPatterns.reduce((result: string, datePattern: IDatePattern) => {
                 return result.replace(datePattern.pattern, datePattern.handler(_date));
             }, pattern);
         };
     }
+
+    /* tslint:disable */
+    export interface date {
+        (pattern: string): IFilter<Date|number, string>;
+        (pattern: string, processor: IFilter<any, number|Date>): IFilter<any, string>;
+    }
+    /* tslint:enable */
 
 }

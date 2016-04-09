@@ -12,6 +12,6 @@ echo 'compile karma.conf.ts'
 node node_modules/typescript/bin/tsc ./karma.conf.ts || exit 1
 echo 'compile karma.conf.ts >> DONE'
 
-echo 'compile gulpfile.ts'
-node node_modules/typescript/bin/tsc ./gulpfile.ts -m commonjs || exit 1
-echo 'compile gulpfile.ts >> DONE'
+echo 'compile IgnoreCoverage.ts'
+node node_modules/typescript/bin/tsc ./scripts/IgnoreCoverage.ts -m commonjs || exit 1
+echo 'compile IgnoreCoverage.ts >> DONE'
