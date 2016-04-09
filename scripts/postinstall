@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+echo 'post install start'
+echo 'install install typings'
+npm run install_typings || exit 0
+echo 'copy hooks'
+sh scripts/copy || exit 0
+echo 'run test'
+npm run test || exit 0
+echo 'post install done'
