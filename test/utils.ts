@@ -96,6 +96,70 @@ new TestManager([
                         falseValues: [[{}, {id: 1}], {a: {id: 3}, b: {id: 1}}]
                     }
                 ]
+            },
+            {
+                testName: 'round',
+                children: [
+                    {
+                        testName: 'with len',
+                        testCallback: (data: number) => {
+                            return utils.round(data, 3) === 2.333;
+                        },
+                        trueValues: [2.333333, 2.3329],
+                        falseValues: [2.3, 2.3339]
+                    },
+                    {
+                        testName: 'without len',
+                        testCallback: (data: number) => {
+                            return utils.round(data) === 2.33;
+                        },
+                        trueValues: [2.333333, 2.329],
+                        falseValues: [2.3, 2.339]
+                    }
+                ]
+            },
+            {
+                testName: 'splitRange',
+                children: [
+                    {
+                        testName: 'with options',
+                        children: [
+                            {
+                                testName: 'with separator',
+                                testCallback: (data: number) => {
+                                    return utils.splitRange(data, {separator: ','}) === '1 000,1';
+                                },
+                                trueValues: [1000.1]
+                            },
+                            {
+                                testName: 'with nbsp',
+                                testCallback: (data: number) => {
+                                    return utils.splitRange(data, {nbsp: true}) === '1&nbsp;000.1';
+                                },
+                                trueValues: [1000.1]
+                            },
+                            {
+                                testName: 'empty options',
+                                testCallback: (data: number) => {
+                                    return utils.splitRange(data, {}) === '1 000 000';
+                                },
+                                trueValues: [1000000]
+                            }
+                        ],
+                    },
+                    {
+                        testName: 'with processor',
+                        testCallback: (data: number) => {
+                            return utils.splitRange(data, null, (data: number) => utils.round(data, 1)) === '1 000.1';
+                        },
+                        trueValues: [1000.11, 1000.1, 1000.111]
+                    },
+                    {
+                        testName: 'only number',
+                        testCallback: (data: number) => utils.splitRange(data) === '1 000',
+                        trueValues: [1000]
+                    }
+                ]
             }
         ]
     }

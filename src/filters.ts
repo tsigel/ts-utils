@@ -99,6 +99,20 @@ module utils.filters {
         return not(containsDeep(data));
     }
     
+    export function round(len?: number): IFilter<number, number> {
+        return (num: number) => utils.round(num, len);
+    }
+    
+    export function splitRange(data?: ISplitRangeOptions,
+                               processor?: IFilter<number, number>): IFilter<number, string> {
+        
+        return (num: number) => utils.splitRange(num, data, processor);
+    }
+    
+    export function roundSplit(len?: number, data?: ISplitRangeOptions): IFilter<number, string> {
+        return splitRange(data, round(len));
+    }
+    
     export function equal<T>(some: T, noStrict?: boolean): IFilter<T, boolean> {
         if (noStrict) {
             return (data: T): boolean => {

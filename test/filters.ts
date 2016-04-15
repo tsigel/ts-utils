@@ -191,6 +191,85 @@ new TestManager([
                         falseValues: [10]
                     }
                 ]
+            },
+            {
+                testName: 'round',
+                children: [
+                    {
+                        testName: 'with len',
+                        testCallback: (num: number) => {
+                            let filter = utils.filters.round(3);
+                            return filter(num) === 1000.111;
+                        },
+                        trueValues: [1000.1111, 1000.1109]
+                    },
+                    {
+                        testName: 'without len',
+                        testCallback: (num: number) => {
+                            let filter = utils.filters.round();
+                            return filter(num) === 1000.11;
+                        },
+                        trueValues: [1000.1111, 1000.109]
+                    }
+                ]
+            },
+            {
+                testName: 'splitRange',
+                children: [
+                    {
+                        testName: 'with options',
+                        children: [
+                            {
+                                testName: 'with separator',
+                                testCallback: (data: number) => {
+                                    let filter = utils.filters.splitRange({separator: ','});
+                                    return filter(data) === '1 000,1'
+                                },
+                                trueValues: [1000.1]
+                            },
+                            {
+                                testName: 'with nbsp',
+                                testCallback: (data: number) => {
+                                    let filter = utils.filters.splitRange({nbsp: true});
+                                    return filter(data) === '1&nbsp;000.1'
+                                },
+                                trueValues: [1000.1]
+                            },
+                            {
+                                testName: 'empty options',
+                                testCallback: (data: number) => {
+                                    let filter = utils.filters.splitRange({});
+                                    return filter(data) === '1 000 000'
+                                },
+                                trueValues: [1000000]
+                            }
+                        ],
+                    },
+                    {
+                        testName: 'with processor',
+                        testCallback: (data: number) => {
+                            let filter = utils.filters.splitRange(null, (data: number) => utils.round(data, 1));
+                            return filter(data) === '1 000.1'
+                        },
+                        trueValues: [1000.11, 1000.1, 1000.111]
+                    },
+                    {
+                        testName: 'only number',
+                        testCallback: (data: number) => {
+                            let filter = utils.filters.splitRange();
+                            return filter(data) === '1 000'
+                        },
+                        trueValues: [1000]
+                    }
+                ]
+            },
+            {
+                testName: 'roundSplit',
+                testCallback: (data: number) => {
+                    let filter = utils.filters.roundSplit(3);
+                    return filter(data) === '1 000.111';
+                },
+                trueValues: [1000.1111, 1000.1109, 1000.111]
             }
         ]
     }

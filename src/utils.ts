@@ -9,6 +9,8 @@ module utils {
     };
     
     const toString = Object.prototype.toString;
+    
+    export let DEFAULT_NUMBER_SEPARATOR = '.';
 
     export function isObject(some: any): boolean {
         return toString.call(some) === types.object;
@@ -56,6 +58,38 @@ module utils {
             str = '0' + str;
         }
         return str;
+    }
+
+    export function round(num: number, len?: number): number {
+        let factor = Math.pow(10, len || 2);
+        return Math.round(num * factor) / factor;
+    }
+
+    export function splitRange(num: number,
+                               options?: ISplitRangeOptions,
+                               processor?: utils.filters.IFilter<number, number>): string {
+        
+        if (processor) {
+            num = processor(num);
+        }
+        let str = String(num);
+        let numData = str.split('.');
+        let integral = numData[0],
+            fractional = numData[1];
+
+        integral = integral.split('').reverse().join('');
+        integral = integral.replace(/(\d{3})/g, '$1 ')
+            .split('').reverse().join('').replace(/\s/g, options && options.nbsp ? '&nbsp;' : ' ').trim();
+
+        if (fractional) {
+            return integral + (options && options.separator || DEFAULT_NUMBER_SEPARATOR) + fractional;
+        }
+        return integral;
+    }
+    
+    export interface ISplitRangeOptions {
+        nbsp?: boolean;
+        separator?: string;
     }
     
     export function each<T>(some: Object, callback: IEachCallback<T>, context?: any): void {
