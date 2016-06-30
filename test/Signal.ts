@@ -1,6 +1,6 @@
 describe('Signal', () => {
 
-    let signal = new utils.Signal();
+    let signal: utils.Signal<number> = new utils.Signal();
     
     it('create', () => {
         expect(signal instanceof utils.Signal).to.be(true);
