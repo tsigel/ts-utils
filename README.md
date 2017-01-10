@@ -224,3 +224,82 @@ filter(0) //true
 filter('') //true
 filter(5) //true
 ```
+
+### empty
+prams:
+* options?: {
+    skipNumber?: boolean;
+    skipString?: boolean;
+    skipNotEmpty?: boolean;
+    skipNull?: boolean;
+    skipUndefined?: boolean;
+ }
+ 
+ returns (data: any): boolean;
+ 
+ example
+ ```typescript
+ let filter = utils.filters.empty();
+ 
+ filter('') //false;
+ filter(0) //false;
+ filter(null) //false;
+ filter(1) //true;
+ filter({}) //true;
+ 
+ let filter = utils.filters.empty({skipNull: true});
+ 
+ filter('') //false;
+ filter(0) //false;
+ filter(null) //true;
+ filter(1) //true;
+ 
+ let filter = utils.filters.empty({skipNumber: true});
+  
+ filter('') //false;
+ filter(0) //true;
+ filter(null) //false;
+ filter(1) //true;
+  
+ let filter = utils.filters.empty({skipNumber: true});
+    
+ filter('') //false;
+ filter(0) //true;
+ filter(null) //false;
+ filter(1) //true;
+ 
+ let filter = utils.filters.empty({skipNotEmpty: true});
+    
+ filter('') //true;
+ filter(0) //true;
+ filter(null) //false;
+```
+ 
+### contains
+* params: Object
+returns (data: any): boolean;
+
+```typescript
+let filter = utils.filters.contains({id: 1});
+
+filter(1) //false
+filter({a: 1}) //false
+filter({id: 1}) //true
+
+[{id: 2}, {id: 1}, {id: 3}].filter(filter) // [{id: 1}];
+
+```
+
+### notContains
+* params: Object
+returns (data: any): boolean;
+
+```typescript
+let filter = utils.filters.notContains({id: 1});
+
+filter(1) //true
+filter({a: 1}) //true
+filter({id: 1}) //false
+
+[{id: 2}, {id: 1}, {id: 3}].filter(filter) // [{id: 2}, {id: 3}];
+```
