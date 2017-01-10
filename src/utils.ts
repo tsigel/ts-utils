@@ -9,7 +9,7 @@ module utils {
     };
     
     const toString = Object.prototype.toString;
-    
+
     export let DEFAULT_NUMBER_SEPARATOR = '.';
 
     export function isObject(some: any): boolean {

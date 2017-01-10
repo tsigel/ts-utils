@@ -11,6 +11,7 @@
   },
   "description": "",
   "main": "dist/utils.js",
+  "types": "dist/utils.d.ts",
   "directories": {
     "test": "test"
   },
@@ -26,7 +27,7 @@
     "phantomjs-prebuilt": "^2.1.7",
     "tsd": "^0.6.5",
     "tslint": "^3.6.0",
-    "typescript": "^1.8.9"
+    "typescript": "^2.1.4"
   },
   "author": "Daniil Tsigelnitskiy",
   "license": "ISC"

@@ -10,6 +10,7 @@ module utils {
         
         let filter = isFunction(target) ? <filters.IFilter<T, boolean>>target : filters.contains(target);
         let result = null;
+        
         if (isArray(some)) {
             (<Array<T>>some).some((data: T) => {
                 if (filter(data)) {
