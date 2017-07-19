@@ -9,9 +9,11 @@ returns boolean
 
 example
 ```typescript
-utils.isObject(1); //false
-utils.isObject({}); //true
-utils.isObject([]); //false
+import {isObject} from 'ts-utils';
+
+isObject(1); //false
+isObject({}); //true
+isObject([]); //false
 ```
 
 ### isEmpty
@@ -22,10 +24,12 @@ returns boolean
 
 example
 ```typescript
-utils.isEmpty(0); //false
-utils.isEmpty(''); //false
-utils.isEmpty(null); //true
-utils.isEmpty(undefined); //true
+import {isEmpty} from 'ts-utils';
+
+isEmpty(0); //false
+isEmpty(''); //false
+isEmpty(null); //true
+isEmpty(undefined); //true
 ```
 
 ### isNotEmpty
@@ -36,10 +40,12 @@ returns boolean
 
 example
 ```typescript
-utils.isNotEmpty(0); //true
-utils.isNotEmpty(''); //true
-utils.isNotEmpty(null); //false
-utils.isNotEmpty(undefined); //false
+import {isNotEmpty} from 'ts-utils';
+
+isNotEmpty(0); //true
+isNotEmpty(''); //true
+isNotEmpty(null); //false
+isNotEmpty(undefined); //false
 ```
 
 ### isString
@@ -50,9 +56,11 @@ returns boolean
 
 example
 ```typescript
-utils.isString(0); //false
-utils.isString(''); //true
-utils.isString(new String('')); //true
+import {isString} from 'ts-utils';
+
+isString(0); //false
+isString(''); //true
+isString(new String('')); //true
 ```
 
 ### isNumber
@@ -63,9 +71,11 @@ returns boolean
 
 example
 ```typescript
-utils.isNumber(0); //true
-utils.isNumber(new Number(0)); //true
-utils.isNumber(''); //false
+import {isNumber} from 'ts-utils';
+
+isNumber(0); //true
+isNumber(new Number(0)); //true
+isNumber(''); //false
 ```
 
 ### isArray
@@ -76,9 +86,11 @@ returns boolean
 
 example
 ```typescript
-utils.isArray(0); //false
-utils.isArray([]); //true
-utils.isArray({}); //false
+import {isArray} from 'ts-utils';
+
+isArray(0); //false
+isArray([]); //true
+isArray({}); //false
 ```
 
 ### isNull
@@ -89,9 +101,11 @@ returns boolean
 
 example
 ```typescript
-utils.isArray(0); //false
-utils.isArray(null); //true
-utils.isArray(undefined); //false
+import {isArray} from 'ts-utils';
+
+isArray(0); //false
+isArray(null); //true
+isArray(undefined); //false
 ```
 
 ### isUndefined
@@ -102,9 +116,11 @@ returns boolean
 
 example
 ```typescript
-utils.isUndefined(0); //false
-utils.isUndefined(undefined); //true
-utils.isUndefined(null); //false
+import {isUndefined} from 'ts-utils';
+
+isUndefined(0); //false
+isUndefined(undefined); //true
+isUndefined(null); //false
 ```
 
 ### isNaN
@@ -115,10 +131,12 @@ returns boolean
 
 example
 ```typescript
-utils.isNaN(0); //false
-utils.isNaN(NaN); //true
-utils.isNaN(null); //false
-utils.isNaN(undefined); //false
+import {isNaNCheck} from 'ts-utils';
+
+isNaNCheck(0); //false
+isNaNCheck(NaN); //true
+isNaNCheck(null); //false
+isNaNCheck(undefined); //false
 ```
 
 ### isFunction
@@ -129,10 +147,12 @@ returns boolean
 
 example
 ```typescript
-utils.isFunction(0); //false
-utils.isFunction(''.trim); //true
-utils.isFunction(null); //false
-utils.isFunction(undefined); //false
+import {isFunction} from 'ts-utils';
+
+isFunction(0); //false
+isFunction(''.trim); //true
+isFunction(null); //false
+isFunction(undefined); //false
 ```
 
 ### numToLength
@@ -144,9 +164,11 @@ returns string
 
 example
 ```typescript
-utils.numToLength(1, 2); //'01'
-utils.numToLength(1, 3); //'001'
-utils.numToLength(110, 3); //'110'
+import {numToLength} from 'ts-utils';
+
+numToLength(1, 2); //'01'
+numToLength(1, 3); //'001'
+numToLength(110, 3); //'110'
 ```
 
 ### round
@@ -158,8 +180,10 @@ returns string
 
 example
 ```typescript
-utils.round(1.12213); //1.12
-utils.round(1.1239, 3); //1.124
+import {round} from 'ts-utils';
+
+round(1.12213); //1.12
+round(1.1239, 3); //1.124
 ```
 
 ### splitRange
@@ -171,9 +195,11 @@ returns string
 
 example
 ```typescript
-utils.splitRange(1000); //'1 000'
-utils.splitRange(1000.22); //'1 000.22'
-utils.splitRange(1000.22, {separator: ','}); //'1 000,22'
+import {splitRange} from 'ts-utils';
+
+splitRange(1000); //'1 000'
+splitRange(1000.22); //'1 000.22'
+splitRange(1000.22, {separator: ','}); //'1 000,22'
 ```
 
 ### each
@@ -185,8 +211,10 @@ returns void
 
 example
 ```typescript
+import {each} from 'ts-utils';
+
 let names = [];
-utils.each({a: 1, b: 2}, (value: number, key: string) => {
+each({a: 1, b: 2}, (value: number, key: string) => {
   names.push(key);
 });
 console.log(names); //['a', 'b']
@@ -201,7 +229,9 @@ returns boolean
 
 example
 ```typescript
-utils.some({a: 1, b: 2}, (value: number, key: string) => {
+import {some} from 'ts-utils';
+
+some({a: 1, b: 2}, (value: number, key: string) => {
   return key === 'b';
 }); //true
 ```
@@ -216,7 +246,9 @@ returns (data: any): boolean
 
 example
 ```typescript
-let filter = utils.filters.not((some: any) => some === 5 ? false : some);
+import {not} from 'ts-utils';
+
+let filter = not((some: any) => some === 5 ? false : some);
 
 filter(1) //false
 filter(4) //false
@@ -239,7 +271,9 @@ prams:
  
  example
  ```typescript
- let filter = utils.filters.empty();
+ import {empty} from 'ts-utils';
+
+ let filter = empty();
  
  filter('') //false;
  filter(0) //false;
@@ -247,28 +281,28 @@ prams:
  filter(1) //true;
  filter({}) //true;
  
- let filter = utils.filters.empty({skipNull: true});
+ let filter = empty({skipNull: true});
  
  filter('') //false;
  filter(0) //false;
  filter(null) //true;
  filter(1) //true;
  
- let filter = utils.filters.empty({skipNumber: true});
+ let filter = empty({skipNumber: true});
   
  filter('') //false;
  filter(0) //true;
  filter(null) //false;
  filter(1) //true;
   
- let filter = utils.filters.empty({skipNumber: true});
+ let filter = empty({skipNumber: true});
     
  filter('') //false;
  filter(0) //true;
  filter(null) //false;
  filter(1) //true;
  
- let filter = utils.filters.empty({skipNotEmpty: true});
+ let filter = empty({skipNotEmpty: true});
     
  filter('') //true;
  filter(0) //true;
@@ -280,7 +314,9 @@ prams:
 returns (data: any): boolean;
 
 ```typescript
-let filter = utils.filters.contains({id: 1});
+import {contains} from 'ts-utils';
+
+let filter = contains({id: 1});
 
 filter(1) //false
 filter({a: 1}) //false
@@ -295,7 +331,9 @@ filter({id: 1}) //true
 returns (data: any): boolean;
 
 ```typescript
-let filter = utils.filters.notContains({id: 1});
+import {notContains} from 'ts-utils';
+
+let filter = notContains({id: 1});
 
 filter(1) //true
 filter({a: 1}) //true
@@ -303,3 +341,10 @@ filter({id: 1}) //false
 
 [{id: 2}, {id: 1}, {id: 3}].filter(filter) // [{id: 2}, {id: 3}];
 ```
+
+### Change log
+
+## v2.0.0
+
+* rename isNaN to isNaNCheck
+* add nodejs support

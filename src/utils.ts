@@ -44,8 +44,8 @@ export function isUndefined(param: any): boolean {
     return param === undefined;
 }
 
-export function isNaN(param: any): boolean {
-    return isNumber(param) && (<any>window).isNaN(param);
+export function isNaNCheck(param: any): boolean {
+    return isNumber(param) && isNaN(param);
 }
 
 export function isFunction(param: any): boolean {

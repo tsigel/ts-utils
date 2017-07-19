@@ -38,7 +38,7 @@ module.exports = function(config: any): void {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
             // (these files will be instrumented by Istanbul)
-            '../src/**/*.js': ['coverage', 'commonjs'],
+            '../src/**/*.js': ['commonjs'],
             '../node_modules/expect.js/index.js': ['commonjs'],
             './**/*.js': ['commonjs']
         },
@@ -46,7 +46,7 @@ module.exports = function(config: any): void {
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress', 'coverage'],
+        reporters: ['progress'],
 
         // web server port
         port: 9876,
@@ -77,19 +77,6 @@ module.exports = function(config: any): void {
         // Concurrency level
         // how many browser should be started simultanous
         concurrency: Infinity,
-
-        coverageReporter: {
-            type : 'html',
-            dir : 'coverage/',
-            check: {
-                global: {
-                    statements: 100,
-                    lines: 100,
-                    functions: 100,
-                    branches: 100
-                }
-            }
-        },
 
         client: {
             mocha: {

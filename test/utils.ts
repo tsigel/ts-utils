@@ -2,7 +2,7 @@ import * as expect from 'expect.js';
 import {TestManager} from './TestManager';
 import {
     each, isArray, isEmpty, isFunction, isNotEmpty, isNull, isNumber, isObject, isString, isUndefined, numToLength,
-    round, some, splitRange, isNaN
+    round, some, splitRange, isNaNCheck
 } from '../src/utils';
 import {find} from '../src/utilsWithFilters';
 
@@ -61,8 +61,8 @@ new TestManager([
                 falseValues: [{}, 0, '', new String('1'), new Number(1), null]
             },
             {
-                testName: 'isNaN',
-                testCallback: isNaN,
+                testName: 'isNaNCheck',
+                testCallback: isNaNCheck,
                 trueValues: [NaN, new Number(NaN)],
                 falseValues: ['0', 0, new Number(0), {}, [], null, undefined]
             },
