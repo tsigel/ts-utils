@@ -7,6 +7,7 @@
     "init": "sh scripts/postinstall",
     "pretest": "npm run compile",
     "prepublush": "npm run test",
+    "postversion": "git push origin HEAD && git push --tags && npm publish",
     "test": "node_modules/karma/bin/karma start && ./node_modules/.bin/istanbul cover _mocha"
   },
   "description": "",
