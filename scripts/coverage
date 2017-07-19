@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-echo 'compile coverage'
-node ./scripts/IgnoreCoverage.js || exit 1
-echo 'compile coverage >> DONE'

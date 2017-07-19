@@ -5,13 +5,9 @@ node node_modules/typescript/bin/tsc -p ./ || exit 1
 echo 'compile src >> DONE'
 
 echo 'compile test'
-node node_modules/typescript/bin/tsc ./test/*.ts --sourceMap || exit 1
+node node_modules/typescript/bin/tsc -p ./test || exit 1
 echo 'compile test >> DONE'
 
 echo 'compile karma.conf.ts'
 node node_modules/typescript/bin/tsc ./karma.conf.ts || exit 1
 echo 'compile karma.conf.ts >> DONE'
-
-echo 'compile IgnoreCoverage.ts'
-node node_modules/typescript/bin/tsc ./scripts/IgnoreCoverage.ts -m commonjs || exit 1
-echo 'compile IgnoreCoverage.ts >> DONE'

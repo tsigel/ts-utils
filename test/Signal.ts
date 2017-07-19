@@ -1,9 +1,13 @@
+import * as expect from 'expect.js';
+import {Signal} from '../src/Signal';
+
+
 describe('Signal', () => {
 
-    let signal: utils.Signal<number> = new utils.Signal();
+    let signal: Signal<number> = new Signal();
     
     it('create', () => {
-        expect(signal instanceof utils.Signal).to.be(true);
+        expect(signal instanceof Signal).to.be(true);
     });   
     
     it('on', () => {

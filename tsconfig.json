@@ -3,13 +3,16 @@
     "noImplicitAny": false,
     "removeComments": true,
     "preserveConstEnums": true,
-    "out": "dist/utils.js",
+    "module": "umd",
     "sourceMap": true,
     "target": "es5",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declaration": true
   },
+  "include": [
+    "index.ts"
+  ],
   "exclude": [
     "dist",
     "karma.conf.ts",

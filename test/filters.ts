@@ -1,5 +1,11 @@
-///<reference path="../typings/tsd.d.ts"/>
-///<reference path="../dist/utils.d.ts"/>
+import * as expect from 'expect.js';
+import {TestManager} from './TestManager';
+import {
+    contains, containsDeep, empty, equal, not, notContains, notContainsDeep, notEqual,
+    roundFilter, roundSplit, splitRangeFilter, date as dateFilter
+} from '../src/filters';
+import {round} from '../src/utils';
+
 
 /* tslint:disable */
 new TestManager([
@@ -11,7 +17,7 @@ new TestManager([
                 children: [
                     {
                         testName: 'with processor',
-                        testCallback: utils.filters.not((data: any) => {
+                        testCallback: not((data: any) => {
                             if (data === 5) {
                                 return false;
                             }
@@ -22,7 +28,7 @@ new TestManager([
                     },
                     {
                         testName: 'without processor',
-                        testCallback: utils.filters.not(),
+                        testCallback: not(),
                         trueValues: [0, ''],
                         falseValues: [1, '1', {}, []]
                     }
@@ -33,19 +39,19 @@ new TestManager([
                 children: [
                     {
                         testName: 'without options',
-                        testCallback: utils.filters.empty(),
+                        testCallback: empty(),
                         trueValues: [1, {}, [], '1'],
                         falseValues: [0, '', null, undefined]
                     },
                     {
                         testName: 'with empty options',
-                        testCallback: utils.filters.empty({}),
+                        testCallback: empty({}),
                         trueValues: [1, {}, [], '1'],
                         falseValues: [0, '', null, undefined]
                     },
                     {
                         testName: 'with some options (not interface)',
-                        testCallback: utils.filters.empty(<any>{
+                        testCallback: empty(<any>{
                             id: 1,
                             skip: 1,
                             skipTrololo: []
@@ -100,13 +106,13 @@ new TestManager([
                         falseValue: ['']
                     }
                 ].map((forTest: any) => {
-                    let options = {};
+                    const options = {};
                     forTest.key.split('|').forEach((optionName: string) => {
                         options[optionName] = true;
                     });
                     return {
                         testName: forTest.key,
-                        testCallback: utils.filters.empty(options),
+                        testCallback: empty(options),
                         trueValues: forTest.trueValue,
                         falseValues: forTest.falseValue
                     };
@@ -114,7 +120,7 @@ new TestManager([
             },
             {
                 testName: 'contains',
-                testCallback: utils.filters.contains({id: 1, a: 1}),
+                testCallback: contains({id: 1, a: 1}),
                 trueValues: [{id: 1, a: 1}],
                 falseValues: [1, 0, null, undefined, {}, [], {id: 1}, {id: 1, a: 2}]
             },
@@ -123,13 +129,13 @@ new TestManager([
                 children: [
                     {
                         testName: 'one level',
-                        testCallback: utils.filters.containsDeep({id: 1, a: 1}),
+                        testCallback: containsDeep({id: 1, a: 1}),
                         trueValues: [{id: 1, a: 1}],
                         falseValues: [1, 0, null, undefined, {}, [], {id: 1}, {id: 1, a: 2}]
                     },
                     {
                         testName: 'two level',
-                        testCallback: utils.filters.containsDeep({a: {b: 1}}),
+                        testCallback: containsDeep({a: {b: 1}}),
                         trueValues: [{a: {b: 1}}],
                         falseValues: [1, 0, null, undefined, {}, [], {a: 1}, {a: {}}, {a: {b: 2}}]
                     }
@@ -137,7 +143,7 @@ new TestManager([
             },
             {
                 testName: 'notContains',
-                testCallback: utils.filters.notContains({id: 1, a: 1}),
+                testCallback: notContains({id: 1, a: 1}),
                 trueValues: [1, 0, null, undefined, {}, [], {id: 1}, {id: 1, a: 2}],
                 falseValues: [{id: 1, a: 1}]
             },
@@ -146,13 +152,13 @@ new TestManager([
                 children: [
                     {
                         testName: 'one level',
-                        testCallback: utils.filters.notContainsDeep({id: 1, a: 1}),
+                        testCallback: notContainsDeep({id: 1, a: 1}),
                         trueValues: [1, 0, null, undefined, {}, [], {id: 1}, {id: 1, a: 2}],
                         falseValues: [{id: 1, a: 1}]
                     },
                     {
                         testName: 'two level',
-                        testCallback: utils.filters.notContainsDeep({a: {b: 1}}),
+                        testCallback: notContainsDeep({a: {b: 1}}),
                         trueValues: [1, 0, null, undefined, {}, [], {a: 1}, {a: {}}, {a: {b: 2}}],
                         falseValues: [{a: {b: 1}}]
                     }
@@ -163,13 +169,13 @@ new TestManager([
                 children: [
                     {
                         testName: 'noStrict',
-                        testCallback: utils.filters.equal(10, true),
+                        testCallback: equal(10, true),
                         trueValues: [10, '10', {valueOf: (): number => 10}],
                         falseValues: [9, '11', 11, {}, []]
                     },
                     {
                         testName: 'strict',
-                        testCallback: utils.filters.equal(10),
+                        testCallback: equal(10),
                         trueValues: [10,],
                         falseValues: [9, '10', '11', 11, {}, [], {valueOf: (): number => 10}]
                     }
@@ -180,25 +186,25 @@ new TestManager([
                 children: [
                     {
                         testName: 'noStrict',
-                        testCallback: utils.filters.notEqual(10, true),
+                        testCallback: notEqual(10, true),
                         trueValues: [9, '11', 11, {}, []],
                         falseValues: [10, '10', {valueOf: (): number => 10}]
                     },
                     {
                         testName: 'strict',
-                        testCallback: utils.filters.notEqual(10),
+                        testCallback: notEqual(10),
                         trueValues: [9, '10', '11', 11, {}, [], {valueOf: (): number => 10}],
                         falseValues: [10]
                     }
                 ]
             },
             {
-                testName: 'round',
+                testName: 'roundFilter',
                 children: [
                     {
                         testName: 'with len',
                         testCallback: (num: number) => {
-                            let filter = utils.filters.round(3);
+                            const filter = roundFilter(3);
                             return filter(num) === 1000.111;
                         },
                         trueValues: [1000.1111, 1000.1109]
@@ -206,7 +212,7 @@ new TestManager([
                     {
                         testName: 'without len',
                         testCallback: (num: number) => {
-                            let filter = utils.filters.round();
+                            const filter = roundFilter();
                             return filter(num) === 1000.11;
                         },
                         trueValues: [1000.1111, 1000.109]
@@ -214,7 +220,7 @@ new TestManager([
                 ]
             },
             {
-                testName: 'splitRange',
+                testName: 'splitRangeFilter',
                 children: [
                     {
                         testName: 'with options',
@@ -222,7 +228,7 @@ new TestManager([
                             {
                                 testName: 'with separator',
                                 testCallback: (data: number) => {
-                                    let filter = utils.filters.splitRange({separator: ','});
+                                    const filter = splitRangeFilter({separator: ','});
                                     return filter(data) === '1 000,1'
                                 },
                                 trueValues: [1000.1]
@@ -230,7 +236,7 @@ new TestManager([
                             {
                                 testName: 'with nbsp',
                                 testCallback: (data: number) => {
-                                    let filter = utils.filters.splitRange({nbsp: true});
+                                    const filter = splitRangeFilter({nbsp: true});
                                     return filter(data) === '1&nbsp;000.1'
                                 },
                                 trueValues: [1000.1]
@@ -238,7 +244,7 @@ new TestManager([
                             {
                                 testName: 'empty options',
                                 testCallback: (data: number) => {
-                                    let filter = utils.filters.splitRange({});
+                                    const filter = splitRangeFilter({});
                                     return filter(data) === '1 000 000'
                                 },
                                 trueValues: [1000000]
@@ -248,7 +254,7 @@ new TestManager([
                     {
                         testName: 'with processor',
                         testCallback: (data: number) => {
-                            let filter = utils.filters.splitRange(null, (data: number) => utils.round(data, 1));
+                            const filter = splitRangeFilter(null, (data: number) => round(data, 1));
                             return filter(data) === '1 000.1'
                         },
                         trueValues: [1000.11, 1000.1, 1000.111]
@@ -256,7 +262,7 @@ new TestManager([
                     {
                         testName: 'only number',
                         testCallback: (data: number) => {
-                            let filter = utils.filters.splitRange();
+                            const filter = splitRangeFilter();
                             return filter(data) === '1 000'
                         },
                         trueValues: [1000]
@@ -266,7 +272,7 @@ new TestManager([
             {
                 testName: 'roundSplit',
                 testCallback: (data: number) => {
-                    let filter = utils.filters.roundSplit(3);
+                    const filter = roundSplit(3);
                     return filter(data) === '1 000.111';
                 },
                 trueValues: [1000.1111, 1000.1109, 1000.111]
@@ -278,17 +284,17 @@ new TestManager([
 
 describe('filters', () => {
 
-    let stamp = 1459603645801;
-    let date = new Date(stamp);
-    let pattern = 'YYYY YY MM M DD D hh h mm m ss s';
-    let result = '2016 16 04 4 02 2 16 16 27 27 25 25';
+    const stamp = 1459603645801;
+    const date = new Date(stamp);
+    const pattern = 'YYYY YY MM M DD D hh h mm m ss s';
+    const result = '2016 16 04 4 02 2 16 16 27 27 25 25';
 
     describe('date', () => {
         
         it('without processor', () => {
 
-            let filter = utils.filters.date(pattern);
-            let myFilter = utils.filters.date('DD.MM.YYYY hh:mm:ss');
+            const filter = dateFilter(pattern);
+            const myFilter = dateFilter('DD.MM.YYYY hh:mm:ss');
 
             expect(filter(stamp)).to.be(result);
             expect(filter(date)).to.be(result);
@@ -298,7 +304,7 @@ describe('filters', () => {
         
         it('with processor', () => {
             
-            let filter = utils.filters.date(pattern, (state: boolean) => {
+            const filter = dateFilter(pattern, (state: boolean) => {
                 return state ? date : stamp;
             });
 

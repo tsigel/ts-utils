@@ -1,5 +1,11 @@
-///<reference path="../typings/tsd.d.ts"/>
-///<reference path="../dist/utils.d.ts"/>
+import * as expect from 'expect.js';
+import {TestManager} from './TestManager';
+import {
+    each, isArray, isEmpty, isFunction, isNotEmpty, isNull, isNumber, isObject, isString, isUndefined, numToLength,
+    round, some, splitRange, isNaN
+} from '../src/utils';
+import {find} from '../src/utilsWithFilters';
+
 
 /* tslint:disable */
 new TestManager([
@@ -8,62 +14,62 @@ new TestManager([
         children: [
             {
                 testName: 'isObject',
-                testCallback: utils.isObject,
+                testCallback: isObject,
                 trueValues: [{}, {a: 1}, new TestManager([])],
-                falseValues: [null, 1, '1', new String('1'), new Number(1), [], undefined, utils.each]
+                falseValues: [null, 1, '1', new String('1'), new Number(1), [], undefined, each]
             },
             {
                 testName: 'isEmpty',
-                testCallback: utils.isEmpty,
+                testCallback: isEmpty,
                 trueValues: [null, undefined],
                 falseValues: [{}, [], 0, '', new String('1'), new Number(1)]
             },
             {
                 testName: 'isNotEmpty',
-                testCallback: utils.isNotEmpty,
+                testCallback: isNotEmpty,
                 trueValues: [{}, [], 0, '', new String('1'), new Number(1)],
                 falseValues: [null, undefined]
             },
             {
                 testName: 'isNumber',
-                testCallback: utils.isNumber,
+                testCallback: isNumber,
                 trueValues: [0, NaN, new Number(0), new Number(NaN)],
                 falseValues: ['0', {}, [], null, undefined]
             },
             {
                 testName: 'isString',
-                testCallback: utils.isString,
+                testCallback: isString,
                 trueValues: ['', new String(''), '1'],
                 falseValues: [0, 1, {}, [], null, undefined]
             },
             {
                 testName: 'isArray',
-                testCallback: utils.isArray,
+                testCallback: isArray,
                 trueValues: [[], new Array()],
                 falseValues: [{}, 0, '', new String('1'), new Number(1)]
             },
             {
                 testName: 'isNull',
-                testCallback: utils.isNull,
+                testCallback: isNull,
                 trueValues: [null],
                 falseValues: [{}, 0, '', new String('1'), new Number(1), undefined]
             },
             {
                 testName: 'isUndefined',
-                testCallback: utils.isUndefined,
+                testCallback: isUndefined,
                 trueValues: [undefined],
                 falseValues: [{}, 0, '', new String('1'), new Number(1), null]
             },
             {
                 testName: 'isNaN',
-                testCallback: utils.isNaN,
+                testCallback: isNaN,
                 trueValues: [NaN, new Number(NaN)],
                 falseValues: ['0', 0, new Number(0), {}, [], null, undefined]
             },
             {
                 testName: 'isFunction',
-                testCallback: utils.isFunction,
-                trueValues: [new Function(), utils.each],
+                testCallback: isFunction,
+                trueValues: [new Function(), each],
                 falseValues: ['0', 0, new Number(0), {}, [], null, undefined]
             },
             {
@@ -72,7 +78,7 @@ new TestManager([
                     {
                         testName: 'by Array',
                         testCallback: (data: any): any => {
-                            return utils.find(data, {id: 1}) !== null;
+                            return find(data, {id: 1}) !== null;
                         },
                         trueValues: [[0, {id: 1}]],
                         falseValues: [[0,1,2]]
@@ -80,7 +86,7 @@ new TestManager([
                     {
                         testName: 'by Object',
                         testCallback: (data: any): any => {
-                            return utils.find(data, {id: 1}) !== null;
+                            return find(data, {id: 1}) !== null;
                         },
                         trueValues: [{a: {id: 2}, b: {id: 1}}],
                         falseValues: [{a: {id: 2}, b: {id: 3}}]
@@ -88,7 +94,7 @@ new TestManager([
                     {
                         testName: 'with custom filter',
                         testCallback: (data: any): any => {
-                            return utils.find(data, (some: any) => {
+                            return find(data, (some: any) => {
                                 return some.id === 2;
                             }) !== null;
                         },
@@ -98,12 +104,12 @@ new TestManager([
                 ]
             },
             {
-                testName: 'round',
+                testName: 'roundFilter',
                 children: [
                     {
                         testName: 'with len',
                         testCallback: (data: number) => {
-                            return utils.round(data, 3) === 2.333;
+                            return round(data, 3) === 2.333;
                         },
                         trueValues: [2.333333, 2.3329],
                         falseValues: [2.3, 2.3339]
@@ -111,7 +117,7 @@ new TestManager([
                     {
                         testName: 'without len',
                         testCallback: (data: number) => {
-                            return utils.round(data) === 2.33;
+                            return round(data) === 2.33;
                         },
                         trueValues: [2.333333, 2.329],
                         falseValues: [2.3, 2.339]
@@ -119,7 +125,7 @@ new TestManager([
                 ]
             },
             {
-                testName: 'splitRange',
+                testName: 'splitRangeFilter',
                 children: [
                     {
                         testName: 'with options',
@@ -127,21 +133,21 @@ new TestManager([
                             {
                                 testName: 'with separator',
                                 testCallback: (data: number) => {
-                                    return utils.splitRange(data, {separator: ','}) === '1 000,1';
+                                    return splitRange(data, {separator: ','}) === '1 000,1';
                                 },
                                 trueValues: [1000.1]
                             },
                             {
                                 testName: 'with nbsp',
                                 testCallback: (data: number) => {
-                                    return utils.splitRange(data, {nbsp: true}) === '1&nbsp;000.1';
+                                    return splitRange(data, {nbsp: true}) === '1&nbsp;000.1';
                                 },
                                 trueValues: [1000.1]
                             },
                             {
                                 testName: 'empty options',
                                 testCallback: (data: number) => {
-                                    return utils.splitRange(data, {}) === '1 000 000';
+                                    return splitRange(data, {}) === '1 000 000';
                                 },
                                 trueValues: [1000000]
                             }
@@ -150,13 +156,13 @@ new TestManager([
                     {
                         testName: 'with processor',
                         testCallback: (data: number) => {
-                            return utils.splitRange(data, null, (data: number) => utils.round(data, 1)) === '1 000.1';
+                            return splitRange(data, null, (data: number) => round(data, 1)) === '1 000.1';
                         },
                         trueValues: [1000.11, 1000.1, 1000.111]
                     },
                     {
                         testName: 'only number',
-                        testCallback: (data: number) => utils.splitRange(data) === '1 000',
+                        testCallback: (data: number) => splitRange(data) === '1 000',
                         trueValues: [1000]
                     }
                 ]
@@ -170,8 +176,8 @@ describe('utils', () => {
     
     it('numToLength', () => {
        
-        expect(utils.numToLength(1, 2)).to.be('01');
-        expect(utils.numToLength(12, 2)).to.be('12');
+        expect(numToLength(1, 2)).to.be('01');
+        expect(numToLength(12, 2)).to.be('12');
         
     });
     
@@ -182,7 +188,7 @@ describe('utils', () => {
             b: 2
         };
         
-        expect(utils.some(data, (value: any, key: string) => value === 2 && key === 'b')).to.be(true);
+        expect(some(data, (value: any, key: string) => value === 2 && key === 'b')).to.be(true);
         
     });
     
@@ -198,11 +204,11 @@ describe('utils', () => {
             let result = {};
             let context = {};
             
-            utils.each(data, function (some: any, key: string): void {
+            each(data, function (param: any, key: string): void {
                 if (this !== context) {
                     throw new Error('Wrong context!');
                 }
-                result[key] = some;
+                result[key] = param;
             }, context);
             
             expect(JSON.stringify(result)).to.be(JSON.stringify(data));
@@ -213,8 +219,8 @@ describe('utils', () => {
 
             let result = {};
             
-            utils.each(data, function (some: any, key: string): void {
-                result[key] = some;
+            each(data, function (param: any, key: string): void {
+                result[key] = param;
             });
 
             expect(JSON.stringify(result)).to.be(JSON.stringify(data));
@@ -226,7 +232,7 @@ describe('utils', () => {
             let ok = true;
             let callback = () => (ok = false);
             
-            utils.each(null, callback);
+            each(null, callback);
             expect(ok).to.be(true);
             
         });

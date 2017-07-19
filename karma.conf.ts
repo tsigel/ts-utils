@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Sat Oct 24 2015 20:19:49 GMT+0300 (MSK)
-///<reference path="typings/tsd.d.ts"/>
 
+declare const module: any;
 module.exports = function(config: any): void {
     config.set({
 
@@ -11,7 +11,7 @@ module.exports = function(config: any): void {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['mocha'],
+        frameworks: ['mocha', 'commonjs'],
 
 
         // list of files / patterns to load in the browser
@@ -22,9 +22,8 @@ module.exports = function(config: any): void {
             {pattern: 'dist/*.map', included: false},
             {pattern: 'test/*.ts', included: false},
             {pattern: 'src/*.ts', included: false},
-            'dist/utils.coverage.js',
-            'test/TestManager.js',
-            'test/*.js'
+            './src/**/*.js',
+            './test/**/*.js'
         ],
 
 
@@ -39,7 +38,9 @@ module.exports = function(config: any): void {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
             // (these files will be instrumented by Istanbul)
-            'dist/utils.coverage.js': ['coverage']
+            '../src/**/*.js': ['coverage', 'commonjs'],
+            '../node_modules/expect.js/index.js': ['commonjs'],
+            './**/*.js': ['commonjs']
         },
 
         // test results reporter to use
@@ -66,7 +67,7 @@ module.exports = function(config: any): void {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['PhantomJS', 'chrome'],
+        browsers: ['PhantomJS'],
 
 
         // Continuous Integration mode

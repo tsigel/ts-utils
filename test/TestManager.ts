@@ -1,4 +1,6 @@
-class TestManager {
+import * as expect from 'expect.js';
+
+export class TestManager {
 
     constructor(testData: Array<ITestData>) {
 

@@ -1,8 +1,8 @@
 node_modules
 .idea
 dist
-typings
 **/*.js
+**/*.d.ts
 **/*.map
 /coverage
 npm-debug.log

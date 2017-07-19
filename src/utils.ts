@@ -1,117 +1,116 @@
-module utils {
-    'use strict';
-    
-    const types = {
-        string: '[object String]',
-        number: '[object Number]',
-        object: '[object Object]',
-        array: '[object Array]'
-    };
-    
-    const toString = Object.prototype.toString;
+import {IFilter} from './filters';
 
-    export let DEFAULT_NUMBER_SEPARATOR = '.';
 
-    export function isObject(some: any): boolean {
-        return toString.call(some) === types.object;
-    }
-    
-    export function isEmpty(some: any): boolean {
-        return some == null;
-    }
-    
-    export function isNotEmpty(some: any): boolean {
-        return some != null;
-    }
-    
-    export function isString(some: any): boolean {
-        return toString.call(some) === types.string;
-    }
-    
-    export function isNumber(some: any): boolean {
-        return toString.call(some) === types.number;
-    }
-    
-    export function isArray(some: any): boolean {
-        return toString.call(some) === types.array; 
-    }
-    
-    export function isNull(some: any): boolean {
-        return some === null;
-    }
-    
-    export function isUndefined(some: any): boolean {
-        return some === undefined;
-    }
-    
-    export function isNaN(some: any): boolean {
-        return isNumber(some) && (<any>window).isNaN(some);
-    }
-    
-    export function isFunction(some: any): boolean {
-        return typeof some === 'function';
-    }
+const TYPES = {
+    string: '[object String]',
+    number: '[object Number]',
+    object: '[object Object]',
+    array: '[object Array]'
+};
 
-    export function numToLength(num: number, length: number): string {
-        let str = String(num);
-        for (let i = str.length; i < length; i++) {
-            str = '0' + str;
-        }
-        return str;
-    }
+const toString = Object.prototype.toString;
 
-    export function round(num: number, len?: number): number {
-        let factor = Math.pow(10, len || 2);
-        return Math.round(num * factor) / factor;
-    }
+export let DEFAULT_NUMBER_SEPARATOR = '.';
 
-    export function splitRange(num: number,
-                               options?: ISplitRangeOptions,
-                               processor?: utils.filters.IFilter<number, number>): string {
-        
-        if (processor) {
-            num = processor(num);
-        }
-        let str = String(num);
-        let numData = str.split('.');
-        let integral = numData[0],
-            fractional = numData[1];
+export function isObject(param: any): boolean {
+    return toString.call(param) === TYPES.object;
+}
 
-        integral = integral.split('').reverse().join('');
-        integral = integral.replace(/(\d{3})/g, '$1 ')
-            .split('').reverse().join('').replace(/\s/g, options && options.nbsp ? '&nbsp;' : ' ').trim();
+export function isEmpty(param: any): boolean {
+    return param == null;
+}
 
-        if (fractional) {
-            return integral + (options && options.separator || DEFAULT_NUMBER_SEPARATOR) + fractional;
-        }
-        return integral;
+export function isNotEmpty(param: any): boolean {
+    return param != null;
+}
+
+export function isString(param: any): boolean {
+    return toString.call(param) === TYPES.string;
+}
+
+export function isNumber(param: any): boolean {
+    return toString.call(param) === TYPES.number;
+}
+
+export function isArray(param: any): boolean {
+    return toString.call(param) === TYPES.array;
+}
+
+export function isNull(param: any): boolean {
+    return param === null;
+}
+
+export function isUndefined(param: any): boolean {
+    return param === undefined;
+}
+
+export function isNaN(param: any): boolean {
+    return isNumber(param) && (<any>window).isNaN(param);
+}
+
+export function isFunction(param: any): boolean {
+    return typeof param === 'function';
+}
+
+export function numToLength(num: number, length: number): string {
+    let str = String(num);
+    for (let i = str.length; i < length; i++) {
+        str = '0' + str;
     }
-    
-    export interface ISplitRangeOptions {
-        nbsp?: boolean;
-        separator?: string;
+    return str;
+}
+
+export function round(num: number, len?: number): number {
+    len = len || 2;
+    return Number(Math.round(Number(num + 'e' + len)) + 'e-' + len);
+}
+
+export function splitRange(num: number,
+                           options?: ISplitRangeOptions,
+                           processor?: IFilter<number, number>): string {
+
+    if (processor) {
+        num = processor(num);
     }
-    
-    export function each<T>(some: Object, callback: IEachCallback<T>, context?: any): void {
-        if (!isObject(some)) {
-            return null;
-        } 
-        if (context) {
-            return Object.keys(some).forEach((key: string) => callback.call(context, some[key], key));
-        } else {
-            return Object.keys(some).forEach((key: string) => callback(some[key], key));
-        }
+    const str = String(num);
+    const numData = str.split('.');
+    let integral = numData[0],
+        fractional = numData[1];
+
+    integral = integral.split('').reverse().join('');
+    integral = integral.replace(/(\d{3})/g, '$1 ')
+        .split('').reverse().join('').replace(/\s/g, options && options.nbsp ? '&nbsp;' : ' ').trim();
+
+    if (fractional) {
+        return integral + (options && options.separator || DEFAULT_NUMBER_SEPARATOR) + fractional;
     }
-    
-    export function some<T>(some: Object, callback: ISomeCallback<T>): boolean {
-        return Object.keys(some).some((key: string) => callback(some[key], key));
+    return integral;
+}
+
+export interface ISplitRangeOptions {
+    nbsp?: boolean;
+    separator?: string;
+}
+
+export function each<T>(param: Object, callback: IEachCallback<T>, context?: any): void {
+    if (!isObject(param)) {
+        return null;
     }
-    
-    export interface ISomeCallback<T> {
-        (data?: T, key?: string): boolean;
+    if (context) {
+        return Object.keys(param).forEach((key: string) => callback.call(context, param[key], key));
+    } else {
+        return Object.keys(param).forEach((key: string) => callback(param[key], key));
     }
-    
-    export interface IEachCallback<T> {
-        (data?: T, key?: string): any;
-    }
+}
+
+export function some<T>(param: Object, callback: ISomeCallback<T>): boolean {
+    return Object.keys(param).some((key: string) => callback(param[key], key));
+}
+
+export interface ISomeCallback<T> {
+    (data?: T, key?: string): boolean;
+}
+
+export interface IEachCallback<T> {
+    (data?: T, key?: string): any;
 }
