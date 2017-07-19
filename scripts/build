@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+mkdir dist
+node_modules/.bin/browserify index.js --standalone utils -o ./dist/utils.js

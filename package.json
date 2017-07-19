@@ -2,22 +2,24 @@
   "name": "ts-utils",
   "version": "2.0.0",
   "scripts": {
+    "build": "sh scripts/build",
     "compile": "sh scripts/clean && sh scripts/compile",
     "install_typings": "node node_modules/tsd/build/cli.js install",
     "init": "sh scripts/postinstall",
     "pretest": "npm run compile",
-    "prepublush": "npm run test",
+    "prepublush": "npm run test && npm run build",
     "postversion": "git push origin HEAD && git push --tags && npm publish",
     "test": "node_modules/karma/bin/karma start && ./node_modules/.bin/istanbul cover _mocha"
   },
   "description": "",
   "main": "dist/utils.js",
-  "types": "dist/utils.d.ts",
+  "types": "index.d.ts",
   "directories": {
     "test": "test"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.41",
+    "browserify": "^14.4.0",
     "expect.js": "^0.3.1",
     "istanbul": "^0.4.5",
     "karma": "^1.7.0",
@@ -34,7 +36,5 @@
   },
   "author": "Daniil Tsigelnitskiy",
   "license": "ISC",
-  "dependencies": {
-    "umd": "^3.0.1"
-  }
+  "dependencies": {}
 }
