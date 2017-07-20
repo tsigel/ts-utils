@@ -1,6 +1,9 @@
 import {IFilter} from './filters';
 
-
+/**
+ * @private
+ * @type {{string: string; number: string; object: string; array: string}}
+ */
 const TYPES = {
     string: '[object String]',
     number: '[object Number]',
@@ -8,6 +11,10 @@ const TYPES = {
     array: '[object Array]'
 };
 
+/**
+ * @private
+ * @type {() => string}
+ */
 const toString = Object.prototype.toString;
 
 export let DEFAULT_NUMBER_SEPARATOR = '.';
@@ -113,7 +120,7 @@ export function isFunction(param: any): boolean {
 }
 
 /**
- * We give the number to a certain number of symbols
+ * Give the number to a certain number of symbols
  *
  * @example
  * // returns '022'
@@ -158,7 +165,7 @@ export function round(num: number, len?: number): number {
  *
  * @param {number} num
  * @param {ISplitRangeOptions} options format options
- * @param {IFilter<number, number>} processor function for pre process param
+ * @param {IFilter<number, number>} processor function for preprocess param
  * @returns {string}
  */
 export function splitRange(num: number,

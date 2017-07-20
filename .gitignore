@@ -6,3 +6,4 @@ dist
 **/*.map
 /coverage
 npm-debug.log
+doc

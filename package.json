@@ -13,7 +13,8 @@
     "pretest": "npm run compile",
     "prepublush": "npm run test && npm run build",
     "postversion": "git push origin HEAD && git push --tags && npm publish",
-    "test": "node_modules/karma/bin/karma start && ./node_modules/.bin/istanbul cover _mocha"
+    "test": "node_modules/karma/bin/karma start && ./node_modules/.bin/istanbul cover _mocha",
+    "doc": "node_modules/.bin/typedoc --out ./doc --mode file ./src"
   },
   "description": "Some utils for array irerate",
   "main": "dist/utils.js",
@@ -35,6 +36,7 @@
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-prebuilt": "^2.1.14",
     "tslint": "^5.5.0",
+    "typedoc": "^0.7.1",
     "typescript": "^2.4.1",
     "uglify-js": "^3.0.25"
   },
