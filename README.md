@@ -1,6 +1,8 @@
 # utils
 
 ##API
+
+
 ### isObject
 params:
 * some: any
@@ -310,7 +312,9 @@ prams:
 ```
  
 ### contains
-* params: Object
+params: 
+* data: Object
+
 returns (data: any): boolean;
 
 ```typescript
@@ -327,7 +331,9 @@ filter({id: 1}) //true
 ```
 
 ### notContains
-* params: Object
+params:
+* data: Object
+
 returns (data: any): boolean;
 
 ```typescript
@@ -340,6 +346,58 @@ filter({a: 1}) //true
 filter({id: 1}) //false
 
 [{id: 2}, {id: 1}, {id: 3}].filter(filter) // [{id: 2}, {id: 3}];
+```
+
+### roundFilter
+params:
+* data: number
+
+returns (data: number): number;
+
+```typescript
+import {roundFilter} from 'ts-utils';
+
+let filter = roundFilter(3);
+
+filter(1) //1
+filter(22.22) //22.22
+filter(22.226) //22.23
+```
+
+### roundFilter
+params: 
+* data: {nbsp: boolean; separator: string}
+* \[processor\]: (data: any): number
+
+returns (data: number): string;
+
+```typescript
+import {roundFilter} from 'ts-utils';
+
+let filter = roundFilter({separator: ','});
+
+filter(2222.22) // 2 222,22
+
+let filter = roundFilter({separator: '.'});
+filter(2222.22) // 2 222.22
+```
+
+### roundSplit
+params: 
+* len: number
+* data: {nbsp: boolean; separator: string}
+
+returns (data: number): string;
+
+```typescript
+import {roundSplit} from 'ts-utils';
+
+let filter = roundSplit({separator: ','});
+
+filter(2222.22) // 2 222,22
+
+let filter = roundFilter({separator: '.'});
+filter(2222.22) // 2 222.22
 ```
 
 ### Change log

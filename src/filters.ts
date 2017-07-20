@@ -1,5 +1,5 @@
 import {
-    each, isNotEmpty, isNull, isNumber, isObject, ISplitRangeOptions, isString, isUndefined,
+    each, IHash, isNotEmpty, isNull, isNumber, isObject, ISplitRangeOptions, isString, isUndefined,
     numToLength, round, splitRange
 } from './utils';
 
@@ -25,17 +25,17 @@ export function empty<T>(options?: IEmptyFilterOptions): IFilter<T, boolean> {
     if (!options) {
         return Boolean;
     }
-    const funcs = [];
-    each(options, (value: boolean, optionName: string) => {
+    const functions = [];
+    each(options as IHash<boolean>, (value: boolean, optionName: keyof IEmptyFilterOptions) => {
         if (EMPTY_FUNCS_MAP[optionName] && value) {
-            funcs.push(EMPTY_FUNCS_MAP[optionName]);
+            functions.push(EMPTY_FUNCS_MAP[optionName]);
         }
     });
-    if (!funcs.length) {
+    if (!functions.length) {
         return Boolean;
     } else {
         return (data: T) => {
-            return funcs.some((f: Function) => f(data)) || !!data;
+            return functions.some((f: Function) => f(data)) || !!data;
         };
     }
 }
