@@ -1,4 +1,4 @@
-import {IFilter} from './filters';
+import { IFilter } from './filters';
 
 /**
  * @private
@@ -123,11 +123,9 @@ export function isFunction(param: any): boolean {
  * Give the number to a certain number of symbols
  *
  * @example
- * // returns '022'
- * numToLength(22, 3)
+ * numToLength(22, 3) // returns '022'
  * @example
- * // returns '06'
- * numToLength(new Date().getHours(), 2)
+ * numToLength(new Date().getHours(), 2) //returns '06'
  *
  * @param {number} num
  * @param {number} length
@@ -156,12 +154,10 @@ export function round(num: number, len?: number): number {
  * Format a number
  *
  * @example
- * // returns '21 257,32'
- * splitRange(21257.32, {separator: ','})
+ * splitRange(21257.32, {separator: ','}) // returns '21 257,32'
  *
  * @example
- * // returns '21 257,32'
- * splitRange(21257.322, {separator: ','}, (num) => round(num, 2))
+ * splitRange(21257.322, {separator: ','}, (num) => round(num, 2)) // returns '21 257,32'
  *
  * @param {number} num
  * @param {ISplitRangeOptions} options format options
@@ -217,6 +213,111 @@ export function each<T extends IHash<K>, K>(param: T, callback: IEachCallback<T,
  */
 export function some<T>(param: Object, callback: ISomeCallback<T>): boolean {
     return Object.keys(param).some((key: string) => callback(param[key], key));
+}
+
+/**
+ * Get some data from object by string path
+ *
+ * @example
+ * get({a: {b: 1}}), 'a.b') // returns 1
+ *
+ * @param {Object} data
+ * @param {string} path
+ * @returns {T}
+ */
+export function get<T>(data: Object, path: string): T {
+    let tmp = data;
+    let resultData = null;
+    const paths = path.split('.').reverse();
+
+    function find(pathPart: string): void {
+        if (pathPart in tmp) {
+            tmp = tmp[pathPart];
+        } else {
+            tmp = null;
+        }
+        if (paths.length) {
+            if (tmp) {
+                find(paths.pop());
+            }
+        } else {
+            resultData = tmp;
+        }
+    }
+
+    find(paths.pop());
+
+    return resultData;
+}
+
+/**
+ * Set some data to object by string path
+ *
+ * @example
+ * var some = {};
+ * set(some), 'a.b', 1) // some equal {a: {b: 1}}
+ *
+ * @param {Object} data
+ * @param {string} path
+ * @param value
+ */
+export function set(data: Object, path: string, value: any): void {
+    let tmp = data;
+    const paths = path.split('.').reverse();
+
+    function find(pathPart: string): void {
+
+        if (paths.length) {
+            if (!tmp[pathPart]) {
+                tmp[pathPart] = Object.create(null);
+            }
+            tmp = tmp[pathPart];
+            find(paths.pop());
+        } else {
+            tmp[pathPart] = value;
+        }
+    }
+
+    find(paths.pop());
+}
+
+export function result(param: any): any {
+    if (isFunction(param)) {
+        return param();
+    } else {
+        return param;
+    }
+}
+
+/**
+ * Get array all path from object
+ *
+ * @example
+ * getPaths({a: {b: 1, c: 2}, d: 1}) // return [['a', 'b'], ['a', 'c'], ['d']]
+ *
+ * @param {Object} param
+ * @returns {Array<Array<string>>}
+ */
+export function getPaths(param: Object): Array<Array<string>> {
+    const paths = [];
+
+    function getIterate(parents: Array<string>): (value: any, key: string) => void {
+        const iterate = function (value: any, key: string): void {
+            const newLine = parents.slice();
+            newLine.push(key);
+            if (isObject(value)) {
+                each(value, getIterate(newLine));
+            } else {
+                paths.push(newLine);
+            }
+        };
+        return iterate;
+    }
+
+    const firstLine = [];
+    each(param, getIterate(firstLine));
+
+    return paths;
 }
 
 export interface ISplitRangeOptions {

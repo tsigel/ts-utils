@@ -2,7 +2,7 @@ import * as expect from 'expect.js';
 import {TestManager} from './TestManager';
 import {
     each, isArray, isEmpty, isFunction, isNotEmpty, isNull, isNumber, isObject, isString, isUndefined, numToLength,
-    round, some, splitRange, isNaNCheck
+    round, some, splitRange, isNaNCheck, get, set, result, getPaths
 } from '../src/utils';
 import {find} from '../src/utilsWithFilters';
 
@@ -191,6 +191,40 @@ describe('utils', () => {
         expect(some(data, (value: any, key: string) => value === 2 && key === 'b')).to.be(true);
         
     });
+
+    it('get', () => {
+        const data = {a: {b: {c: {}}}};
+        expect(get(data, 'a.b.c')).to.be(data.a.b.c);
+        expect(get(data, '')).to.be(null);
+        expect(get(data, 'a.b.d')).to.be(null);
+        expect(get(data, 'a.e.k')).to.be(null);
+    });
+
+    it('set', () => {
+        const data: any = {};
+        set(data, 'a.b.c', 1);
+        expect(data.a.b.c).to.be(1);
+        set(data, 'a.b.c', 2);
+        expect(data.a.b.c).to.be(2);
+    });
+
+    it('result', () => {
+        expect(result(() => 5)).to.be(result(5));
+    });
+
+    it('getPaths', () => {
+        const data = {
+            a: {
+                b: 1,
+                c: {
+                    d: 2
+                }
+            },
+            e: 3
+        };
+        const paths = getPaths(data);
+        expect(paths).to.eql([['a', 'b'], ['a', 'c', 'd'], ['e']]);
+    });
     
     describe('each', () => {
         
@@ -200,41 +234,36 @@ describe('utils', () => {
         };
         
         it('with context', () => {
-            
-            let result = {};
+            let res = {};
             let context = {};
             
             each(data, function (param: any, key: string): void {
                 if (this !== context) {
                     throw new Error('Wrong context!');
                 }
-                result[key] = param;
+                res[key] = param;
             }, context);
             
-            expect(JSON.stringify(result)).to.be(JSON.stringify(data));
+            expect(JSON.stringify(res)).to.be(JSON.stringify(data));
             
         });
 
         it('without context', () => {
-
-            let result = {};
+            let res = {};
             
             each(data, function (param: any, key: string): void {
-                result[key] = param;
+                res[key] = param;
             });
 
-            expect(JSON.stringify(result)).to.be(JSON.stringify(data));
-            
+            expect(JSON.stringify(res)).to.be(JSON.stringify(data));
         });
         
         it('empty call', () => {
-            
             let ok = true;
             let callback = () => (ok = false);
             
             each(null, callback);
             expect(ok).to.be(true);
-            
         });
         
     });
