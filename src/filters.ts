@@ -1,6 +1,17 @@
 import {
-    each, IHash, isNotEmpty, isNull, isNumber, isObject, ISplitRangeOptions, isString, isUndefined,
-    numToLength, round, splitRange
+    each, get,
+    getPaths,
+    IHash,
+    isNotEmpty,
+    isNull,
+    isNumber,
+    isObject,
+    ISplitRangeOptions,
+    isString,
+    isUndefined,
+    numToLength,
+    round,
+    splitRange
 } from './utils';
 
 
@@ -52,23 +63,17 @@ export function contains<T>(data: Object): IFilter<T, boolean> {
 
 export function containsDeep<T>(data: Object): IFilter<T, boolean> {
 
-    const check = (origin: any, local: any): boolean => {
-        return Object.keys(origin).every((key: string) => {
-            if (isObject(origin[key])) {
-                if (isObject(local[key])) {
-                    return check(origin[key], local[key]);
-                } else {
-                    return false;
-                }
-            } else {
-                return origin[key] === local[key];
-            }
+    const paths = getPaths(data);
+    const check = function (localData: Object): boolean {
+        return paths.every(function (parts: Array<string>): boolean {
+            const path = parts.join('.');
+            return get(data, path) === get(localData, path);
         });
     };
 
     return (localData: T): boolean => {
         if (isObject(localData)) {
-            return check(data, localData);
+            return check(localData);
         } else {
             return false;
         }
@@ -204,6 +209,7 @@ export interface date {
 
     (pattern: string, processor: IFilter<any, number | Date>): IFilter<any, string>;
 }
+
 /* tslint:enable */
 
 export interface IProcessor<T> {

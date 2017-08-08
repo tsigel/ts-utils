@@ -198,6 +198,8 @@ describe('utils', () => {
         expect(get(data, '')).to.be(null);
         expect(get(data, 'a.b.d')).to.be(null);
         expect(get(data, 'a.e.k')).to.be(null);
+        const data2 = {a: 1};
+        expect(get(data2, 'a.v')).to.be(null);
     });
 
     it('set', () => {

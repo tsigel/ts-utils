@@ -120,6 +120,27 @@ export function isFunction(param: any): boolean {
 }
 
 /**
+ *
+ * @param param
+ * @returns {TTypes}
+ */
+export function typeOf(param: any): TTypes {
+    const type = typeof param;
+    switch (type) {
+        case 'object':
+            if (isArray(param)) {
+                return 'array';
+            } else if (isObject(param)) {
+                return 'object';
+            } else {
+                return 'null';
+            }
+        default:
+            return type as TTypes;
+    }
+}
+
+/**
  * Give the number to a certain number of symbols
  *
  * @example
@@ -231,7 +252,7 @@ export function get<T>(data: Object, path: string): T {
     const paths = path.split('.').reverse();
 
     function find(pathPart: string): void {
-        if (pathPart in tmp) {
+        if (isObject(tmp) && (pathPart in tmp)) {
             tmp = tmp[pathPart];
         } else {
             tmp = null;
@@ -336,3 +357,14 @@ export interface IEachCallback<T extends IHash<K>, K> {
 export interface IHash<T> {
     [key: string]: T;
 }
+
+export type TTypes =
+    'string'
+    | 'boolean'
+    | 'number'
+    | 'object'
+    | 'function'
+    | 'array'
+    | 'null'
+    | 'undefined'
+    | 'boolean';
