@@ -11,7 +11,7 @@
     "init": "sh scripts/postinstall",
     "pretest": "npm run compile",
     "prepublush": "npm run test && npm run build",
-    "postversion": "git push origin HEAD && git push --tags && npm publish",
+    "postversion": "git push origin HEAD && git push --tags && && npm run build && npm publish",
     "test": "node_modules/karma/bin/karma start && ./node_modules/.bin/istanbul cover _mocha",
     "test-dev": "npm run pretest && ./node_modules/.bin/istanbul cover _mocha",
     "test-debug": "node_modules/karma/bin/karma start --singleRun false --autoWatch true",
