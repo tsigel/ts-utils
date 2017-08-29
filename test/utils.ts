@@ -1,10 +1,30 @@
 import * as expect from 'expect.js';
-import {TestManager} from './TestManager';
+import { TestManager } from './TestManager';
 import {
-    each, isArray, isEmpty, isFunction, isNotEmpty, isNull, isNumber, isObject, isString, isUndefined, numToLength,
-    round, some, splitRange, isNaNCheck, get, set, result, getPaths
+    clone, cloneDeep,
+    each,
+    get,
+    getPaths,
+    isArray,
+    isEmpty,
+    isFunction,
+    isNaNCheck,
+    isNotEmpty,
+    isNull,
+    isNumber,
+    isObject,
+    isString,
+    isUndefined,
+    merge,
+    numToLength,
+    result,
+    round,
+    set,
+    some,
+    splitRange,
+    typeOf
 } from '../src/utils';
-import {find} from '../src/utilsWithFilters';
+import { find } from '../src/utilsWithFilters';
 
 
 /* tslint:disable */
@@ -15,7 +35,7 @@ new TestManager([
             {
                 testName: 'isObject',
                 testCallback: isObject,
-                trueValues: [{}, {a: 1}, new TestManager([])],
+                trueValues: [{}, { a: 1 }, new TestManager([])],
                 falseValues: [null, 1, '1', new String('1'), new Number(1), [], undefined, each]
             },
             {
@@ -78,18 +98,18 @@ new TestManager([
                     {
                         testName: 'by Array',
                         testCallback: (data: any): any => {
-                            return find(data, {id: 1}) !== null;
+                            return find(data, { id: 1 }) !== null;
                         },
-                        trueValues: [[0, {id: 1}]],
-                        falseValues: [[0,1,2]]
+                        trueValues: [[0, { id: 1 }]],
+                        falseValues: [[0, 1, 2]]
                     },
                     {
                         testName: 'by Object',
                         testCallback: (data: any): any => {
-                            return find(data, {id: 1}) !== null;
+                            return find(data, { id: 1 }) !== null;
                         },
-                        trueValues: [{a: {id: 2}, b: {id: 1}}],
-                        falseValues: [{a: {id: 2}, b: {id: 3}}]
+                        trueValues: [{ a: { id: 2 }, b: { id: 1 } }],
+                        falseValues: [{ a: { id: 2 }, b: { id: 3 } }]
                     },
                     {
                         testName: 'with custom filter',
@@ -98,8 +118,8 @@ new TestManager([
                                 return some.id === 2;
                             }) !== null;
                         },
-                        trueValues: [[{}, {id: 2}], {a: {id: 2}, b: {id: 1}}],
-                        falseValues: [[{}, {id: 1}], {a: {id: 3}, b: {id: 1}}]
+                        trueValues: [[{}, { id: 2 }], { a: { id: 2 }, b: { id: 1 } }],
+                        falseValues: [[{}, { id: 1 }], { a: { id: 3 }, b: { id: 1 } }]
                     }
                 ]
             },
@@ -133,14 +153,14 @@ new TestManager([
                             {
                                 testName: 'with separator',
                                 testCallback: (data: number) => {
-                                    return splitRange(data, {separator: ','}) === '1 000,1';
+                                    return splitRange(data, { separator: ',' }) === '1 000,1';
                                 },
                                 trueValues: [1000.1]
                             },
                             {
                                 testName: 'with nbsp',
                                 testCallback: (data: number) => {
-                                    return splitRange(data, {nbsp: true}) === '1&nbsp;000.1';
+                                    return splitRange(data, { nbsp: true }) === '1&nbsp;000.1';
                                 },
                                 trueValues: [1000.1]
                             },
@@ -173,32 +193,33 @@ new TestManager([
 /* tslint:enable */
 
 describe('utils', () => {
-    
+
     it('numToLength', () => {
-       
+
         expect(numToLength(1, 2)).to.be('01');
         expect(numToLength(12, 2)).to.be('12');
-        
+
     });
-    
+
     it('some', () => {
-        
+
         let data = {
             a: 1,
             b: 2
         };
-        
+
         expect(some(data, (value: any, key: string) => value === 2 && key === 'b')).to.be(true);
-        
     });
 
     it('get', () => {
-        const data = {a: {b: {c: {}}}};
+        const data = { a: { b: { c: [1] } } };
         expect(get(data, 'a.b.c')).to.be(data.a.b.c);
+        expect(get(data, 'a.b.c[0]')).to.be(data.a.b.c[0]);
+        expect(get(data, 'a.b.c.0')).to.be(data.a.b.c[0]);
         expect(get(data, '')).to.be(null);
         expect(get(data, 'a.b.d')).to.be(null);
         expect(get(data, 'a.e.k')).to.be(null);
-        const data2 = {a: 1};
+        const data2 = { a: 1 };
         expect(get(data2, 'a.v')).to.be(null);
     });
 
@@ -208,6 +229,8 @@ describe('utils', () => {
         expect(data.a.b.c).to.be(1);
         set(data, 'a.b.c', 2);
         expect(data.a.b.c).to.be(2);
+        set(data, 'a.b.c[0]', 3);
+        expect(data.a.b.c[0]).to.be(3);
     });
 
     it('result', () => {
@@ -222,52 +245,103 @@ describe('utils', () => {
                     d: 2
                 }
             },
-            e: 3
+            e: 3,
+            j: [{ a: 1 }]
         };
         const paths = getPaths(data);
-        expect(paths).to.eql([['a', 'b'], ['a', 'c', 'd'], ['e']]);
+        expect(paths.map(String)).to.eql(['a.b', 'a.c.d', 'e', 'j[0].a']);
+        const arrPaths = getPaths([{ a: 1 }]);
+        expect(arrPaths.map(String)).to.eql(['[0].a']);
     });
-    
+
+    it('clone', () => {
+        [
+            1, '1', new Function(), true, null, undefined
+        ].forEach((item) => {
+            expect(clone(item)).to.be(item);
+        });
+        const arr = [];
+        expect(clone(arr)).not.be.equal(arr);
+        expect(clone(arr)).to.be.eql(arr);
+        const data = { a: {} };
+        expect(clone(data)).not.be.equal(data);
+        expect(clone(data).a).to.be(data.a);
+    });
+
+    it('merge', () => {
+        const merged = merge<any>({ a: 1, arr: [{ a: 1 }] }, { b: 2 }, { c: 3 }, { arr: [{ b: 2 }] });
+        expect(merged).to.be.eql({ a: 1, b: 2, c: 3, arr: [{ a: 1, b: 2 }] });
+    });
+
+    it('cloneDeep', () => {
+        const data = { a: 1, b: 2, c: 3, arr: [{ a: 1, b: 2 }] };
+        expect(cloneDeep(data)).to.be.eql(data);
+        expect(cloneDeep(data)).not.be.equal(data);
+    });
+
+    it('typeOf', () => {
+        expect(typeOf(null)).to.be('null');
+        expect(typeOf({})).to.be('object');
+        expect(typeOf([])).to.be('array');
+        expect(typeOf(new Number(1))).to.be('number');
+        expect(typeOf(new String(1))).to.be('string');
+        expect(typeOf('')).to.be('string');
+        expect(typeOf(true)).to.be('boolean');
+        expect(typeOf(new Boolean(true))).to.be('boolean');
+        expect(typeOf(undefined)).to.be('undefined');
+        expect(typeOf((() => ({})))).to.be('function');
+    });
+
     describe('each', () => {
-        
+
         let data = {
             a: 1,
             b: 2
         };
-        
+
         it('with context', () => {
             let res = {};
             let context = {};
-            
+
             each(data, function (param: any, key: string): void {
                 if (this !== context) {
                     throw new Error('Wrong context!');
                 }
                 res[key] = param;
             }, context);
-            
+
             expect(JSON.stringify(res)).to.be(JSON.stringify(data));
-            
+
         });
 
         it('without context', () => {
             let res = {};
-            
+
             each(data, function (param: any, key: string): void {
                 res[key] = param;
             });
 
             expect(JSON.stringify(res)).to.be(JSON.stringify(data));
         });
-        
+
         it('empty call', () => {
             let ok = true;
             let callback = () => (ok = false);
-            
+
             each(null, callback);
             expect(ok).to.be(true);
         });
-        
+
+        it('by array', () => {
+            let ok = 0;
+            const localData = [1, 2];
+            each(localData, function (value: number, index: number): void {
+                ok++;
+                expect(value).to.be(localData[index]);
+            });
+            expect(ok).to.be(2);
+        });
+
     });
-    
+
 });

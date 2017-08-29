@@ -1,5 +1,6 @@
 import {
-    each, get,
+    each,
+    get,
     getPaths,
     IHash,
     isNotEmpty,
@@ -13,6 +14,7 @@ import {
     round,
     splitRange
 } from './utils';
+import { Path } from './Path';
 
 
 const EMPTY_FUNCS_MAP = {
@@ -51,40 +53,45 @@ export function empty<T>(options?: IEmptyFilterOptions): IFilter<T, boolean> {
     }
 }
 
-export function contains<T>(data: Object): IFilter<T, boolean> {
-    const keys = Object.keys(data);
-    return (localData: T): boolean => {
-        if (!isObject(localData)) {
-            return false;
-        }
-        return keys.every((key: string) => data[key] === localData[key]);
-    };
+export function contains<T>(data: Partial<T>): IFilter<T, boolean> {
+    if (typeof data === 'object') {
+        const keys = Object.keys(data);
+        return (localData: T): boolean => {
+            if (!isObject(localData)) {
+                return false;
+            }
+            return keys.every((key: keyof T) => data[key] === localData[key]);
+        };
+    } else {
+        return (localData: T) => {
+            return data === localData;
+        };
+    }
 }
 
-export function containsDeep<T>(data: Object): IFilter<T, boolean> {
+export function containsDeep<T extends object>(data: Partial<T>): IFilter<T, boolean> {
 
     const paths = getPaths(data);
-    const check = function (localData: Object): boolean {
-        return paths.every(function (parts: Array<string>): boolean {
-            const path = parts.join('.');
-            return get(data, path) === get(localData, path);
+    const check = function (localData: object): boolean {
+        return paths.every(function (parts: Path): boolean {
+            return get(data, parts) === get(localData, parts);
         });
     };
 
     return (localData: T): boolean => {
-        if (isObject(localData)) {
-            return check(localData);
+        if (typeof localData === 'object') {
+            return check(localData as any);
         } else {
             return false;
         }
     };
 }
 
-export function notContains<T>(data: Object): IFilter<T, boolean> {
+export function notContains<T>(data: Partial<T>): IFilter<T, boolean> {
     return not(contains(data));
 }
 
-export function notContainsDeep<T>(data: Object): IFilter<T, boolean> {
+export function notContainsDeep<T extends object>(data: Partial<T>): IFilter<T, boolean> {
     return not(containsDeep(data));
 }
 

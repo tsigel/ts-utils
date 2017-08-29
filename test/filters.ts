@@ -1,10 +1,20 @@
 import * as expect from 'expect.js';
-import {TestManager} from './TestManager';
+import { TestManager } from './TestManager';
 import {
-    contains, containsDeep, empty, equal, not, notContains, notContainsDeep, notEqual,
-    roundFilter, roundSplit, splitRangeFilter, date as dateFilter
+    contains,
+    containsDeep,
+    date as dateFilter,
+    empty,
+    equal,
+    not,
+    notContains,
+    notContainsDeep,
+    notEqual,
+    roundFilter,
+    roundSplit,
+    splitRangeFilter
 } from '../src/filters';
-import {round} from '../src/utils';
+import { round } from '../src/utils';
 
 
 /* tslint:disable */
@@ -120,47 +130,47 @@ new TestManager([
             },
             {
                 testName: 'contains',
-                testCallback: contains({id: 1, a: 1}),
-                trueValues: [{id: 1, a: 1}],
-                falseValues: [1, 0, null, undefined, {}, [], {id: 1}, {id: 1, a: 2}]
+                testCallback: contains({ id: 1, a: 1 }),
+                trueValues: [{ id: 1, a: 1 }],
+                falseValues: [1, 0, null, undefined, {}, [], { id: 1 }, { id: 1, a: 2 }]
             },
             {
                 testName: 'containsDeep',
                 children: [
                     {
                         testName: 'one level',
-                        testCallback: containsDeep({id: 1, a: 1}),
-                        trueValues: [{id: 1, a: 1}],
-                        falseValues: [1, 0, null, undefined, {}, [], {id: 1}, {id: 1, a: 2}]
+                        testCallback: containsDeep({ id: 1, a: 1 }),
+                        trueValues: [{ id: 1, a: 1 }],
+                        falseValues: [1, 0, null, undefined, {}, [], { id: 1 }, { id: 1, a: 2 }]
                     },
                     {
                         testName: 'two level',
-                        testCallback: containsDeep({a: {b: 1}}),
-                        trueValues: [{a: {b: 1}}],
-                        falseValues: [1, 0, null, undefined, {}, [], {a: 1}, {a: {}}, {a: {b: 2}}]
+                        testCallback: containsDeep({ a: { b: 1 } }),
+                        trueValues: [{ a: { b: 1 } }],
+                        falseValues: [1, 0, null, undefined, {}, [], { a: 1 }, { a: {} }, { a: { b: 2 } }]
                     }
                 ]
             },
             {
                 testName: 'notContains',
-                testCallback: notContains({id: 1, a: 1}),
-                trueValues: [1, 0, null, undefined, {}, [], {id: 1}, {id: 1, a: 2}],
-                falseValues: [{id: 1, a: 1}]
+                testCallback: notContains({ id: 1, a: 1 }),
+                trueValues: [1, 0, null, undefined, {}, [], { id: 1 }, { id: 1, a: 2 }],
+                falseValues: [{ id: 1, a: 1 }]
             },
             {
                 testName: 'notContainsDeep',
                 children: [
                     {
                         testName: 'one level',
-                        testCallback: notContainsDeep({id: 1, a: 1}),
-                        trueValues: [1, 0, null, undefined, {}, [], {id: 1}, {id: 1, a: 2}],
-                        falseValues: [{id: 1, a: 1}]
+                        testCallback: notContainsDeep({ id: 1, a: 1 }),
+                        trueValues: [1, 0, null, undefined, {}, [], { id: 1 }, { id: 1, a: 2 }],
+                        falseValues: [{ id: 1, a: 1 }]
                     },
                     {
                         testName: 'two level',
-                        testCallback: notContainsDeep({a: {b: 1}}),
-                        trueValues: [1, 0, null, undefined, {}, [], {a: 1}, {a: {}}, {a: {b: 2}}],
-                        falseValues: [{a: {b: 1}}]
+                        testCallback: notContainsDeep({ a: { b: 1 } }),
+                        trueValues: [1, 0, null, undefined, {}, [], { a: 1 }, { a: {} }, { a: { b: 2 } }],
+                        falseValues: [{ a: { b: 1 } }]
                     }
                 ]
             },
@@ -170,14 +180,14 @@ new TestManager([
                     {
                         testName: 'noStrict',
                         testCallback: equal(10, true),
-                        trueValues: [10, '10', {valueOf: (): number => 10}],
+                        trueValues: [10, '10', { valueOf: (): number => 10 }],
                         falseValues: [9, '11', 11, {}, []]
                     },
                     {
                         testName: 'strict',
                         testCallback: equal(10),
                         trueValues: [10,],
-                        falseValues: [9, '10', '11', 11, {}, [], {valueOf: (): number => 10}]
+                        falseValues: [9, '10', '11', 11, {}, [], { valueOf: (): number => 10 }]
                     }
                 ]
             },
@@ -188,12 +198,12 @@ new TestManager([
                         testName: 'noStrict',
                         testCallback: notEqual(10, true),
                         trueValues: [9, '11', 11, {}, []],
-                        falseValues: [10, '10', {valueOf: (): number => 10}]
+                        falseValues: [10, '10', { valueOf: (): number => 10 }]
                     },
                     {
                         testName: 'strict',
                         testCallback: notEqual(10),
-                        trueValues: [9, '10', '11', 11, {}, [], {valueOf: (): number => 10}],
+                        trueValues: [9, '10', '11', 11, {}, [], { valueOf: (): number => 10 }],
                         falseValues: [10]
                     }
                 ]
@@ -228,7 +238,7 @@ new TestManager([
                             {
                                 testName: 'with separator',
                                 testCallback: (data: number) => {
-                                    const filter = splitRangeFilter({separator: ','});
+                                    const filter = splitRangeFilter({ separator: ',' });
                                     return filter(data) === '1 000,1'
                                 },
                                 trueValues: [1000.1]
@@ -236,7 +246,7 @@ new TestManager([
                             {
                                 testName: 'with nbsp',
                                 testCallback: (data: number) => {
-                                    const filter = splitRangeFilter({nbsp: true});
+                                    const filter = splitRangeFilter({ nbsp: true });
                                     return filter(data) === '1&nbsp;000.1'
                                 },
                                 trueValues: [1000.1]
@@ -289,8 +299,13 @@ describe('filters', () => {
     const pattern = 'YYYY YY MM M DD D hh h mm m ss s';
     const result = '2016 16 04 4 02 2 16 16 27 27 25 25';
 
+    it('contains simple', () => {
+        const arr = [1, 2, 3];
+        expect(arr.filter(contains(1))).to.be.eql([1]);
+    });
+
     describe('date', () => {
-        
+
         it('without processor', () => {
 
             const filter = dateFilter(pattern);
@@ -301,16 +316,16 @@ describe('filters', () => {
             expect(myFilter(stamp)).to.be('02.04.2016 16:27:25');
 
         });
-        
+
         it('with processor', () => {
-            
+
             const filter = dateFilter(pattern, (state: boolean) => {
                 return state ? date : stamp;
             });
 
             expect(filter(1)).to.be(result);
             expect(filter(0)).to.be(result);
-            
+
         });
     });
 

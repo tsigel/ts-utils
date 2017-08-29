@@ -8,12 +8,13 @@
   "scripts": {
     "build": "sh scripts/build",
     "compile": "sh scripts/clean && sh scripts/compile",
-    "install_typings": "node node_modules/tsd/build/cli.js install",
     "init": "sh scripts/postinstall",
     "pretest": "npm run compile",
     "prepublush": "npm run test && npm run build",
     "postversion": "git push origin HEAD && git push --tags && npm publish",
     "test": "node_modules/karma/bin/karma start && ./node_modules/.bin/istanbul cover _mocha",
+    "test-dev": "npm run pretest && ./node_modules/.bin/istanbul cover _mocha",
+    "test-debug": "node_modules/karma/bin/karma start --singleRun false --autoWatch true",
     "doc": "node_modules/.bin/typedoc --out ./doc --mode file ./src"
   },
   "description": "Some utils for array irerate",
