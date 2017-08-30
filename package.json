@@ -6,19 +6,20 @@
     "url": "https://github.com/tsigel/ts-utils.git"
   },
   "scripts": {
-    "build": "sh scripts/build",
-    "compile": "sh scripts/clean && sh scripts/compile",
-    "init": "sh scripts/postinstall",
+    "build": "npm run clean && npm run compile && npm run browserify && npm run uglify",
+    "clean": "rm -rf ./dist ./coverage ./*.js ./*.map ./*.d.ts src/*.js src/*.d.ts src/*.map test/*.js test/*.map",
+    "compile": "node_modules/typescript/bin/tsc -p ./ && node_modules/typescript/bin/tsc -p ./test && node_modules/typescript/bin/tsc ./karma.conf.ts -m commonjs",
+    "browserify": "mkdir -p dist && node_modules/.bin/browserify index.js --standalone ts-utils -o ./dist/ts-utils.js",
+    "uglify": "node_modules/.bin/uglifyjs ./dist/ts-utils.js -o ./dist/ts-utils.min.js",
     "pretest": "npm run compile",
     "prepublush": "npm run test && npm run build",
     "postversion": "git push origin HEAD && git push --tags && npm run build && npm publish",
     "test": "node_modules/karma/bin/karma start && ./node_modules/.bin/istanbul cover _mocha",
     "test-dev": "npm run pretest && ./node_modules/.bin/istanbul cover _mocha",
-    "test-debug": "node_modules/karma/bin/karma start --singleRun false --autoWatch true",
-    "doc": "node_modules/.bin/typedoc --out ./doc --mode file ./src"
+    "test-debug": "node_modules/karma/bin/karma start --singleRun false --autoWatch true"
   },
   "description": "Some utils for array irerate",
-  "main": "dist/utils.js",
+  "main": "dist/ts-utils.min.js",
   "types": "index.d.ts",
   "directories": {
     "test": "test"
@@ -37,9 +38,9 @@
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-prebuilt": "^2.1.14",
     "tslint": "^5.5.0",
-    "typedoc": "^0.7.1",
     "typescript": "^2.4.1",
-    "uglify-js": "^3.0.25"
+    "uglify-js": "^3.0.25",
+    "uglifyjs": "^2.4.11"
   },
   "author": "Daniil Tsigelnitskiy",
   "license": "ISC",
