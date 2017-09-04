@@ -1,9 +1,9 @@
-import {isArray, isFunction} from './utils';
-import {contains, IFilter} from './filters';
+import { isArray, isFunction } from './utils';
+import { contains, IFilter } from './filters';
 
 
-export function find<T extends Object>(some: T[] | { [key: string]: T },
-                                       target: Object | IFilter<T, boolean>): T | void {
+export function find<T extends object>(some: T[] | { [key: string]: T },
+                                       target: object | IFilter<T, boolean>): T | void {
 
     let filter = isFunction(target) ? <IFilter<T, boolean>>target : contains(target);
     let result = null;
