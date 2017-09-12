@@ -210,6 +210,42 @@ export function date(pattern: string, processor?: IFilter<any, Date | number>): 
     };
 }
 
+export function getBinaryFilter<T extends object>(data: Partial<T>): IBinaryFilter<T> {
+    const dataPaths = getPaths(data);
+
+    if (dataPaths.length === 1) {
+        const [path] = dataPaths;
+        const value = get(data, path);
+        return function (item: T): -1 | 0 | 1 {
+            const itemValue = get(item, path);
+            return itemValue > value ? -1 : itemValue === value ? 0 : 1;
+        };
+    } else {
+        const pathsStr = dataPaths.map(String);
+        const pathsHash = Object.create(null);
+        dataPaths.forEach((path) => {
+            pathsHash[String(path)] = get(data, path);
+        });
+        return function (item: T): -1 | 0 | 1 {
+            const map = dataPaths.map((path, i) => {
+                const itemValue = get(item, path);
+                const pathStr = pathsStr[i];
+                return itemValue > pathsHash[pathStr] ? -1 : itemValue === pathsHash[pathStr] ? 0 : 1;
+            });
+            const witoutZero = map.filter(Boolean);
+            if (witoutZero.length === 0) {
+                return 0;
+            } else {
+                return witoutZero[0];
+            }
+        };
+    }
+}
+
+export interface IBinaryFilter<T> {
+    (data: T): -1 | 0 | 1;
+}
+
 /* tslint:disable */
 export interface date {
     (pattern: string): IFilter<Date | number, string>;
