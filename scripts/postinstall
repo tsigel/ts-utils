@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-echo 'post install start'
-echo 'copy hooks'
-sh scripts/copy || exit 0
-echo 'run test'
-npm run test || exit 0
-echo 'post install done'

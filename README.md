@@ -402,6 +402,14 @@ filter(2222.22) // 2 222.22
 
 ### Change log
 
+## v3.0.0 
+   * change method 'getPaths'
+   * add method 'merge'
+   * add method 'clone'
+   * add method 'cloneDeep'
+   * add method 'defaults'
+   * fix method 'typeOf'
+
 ## v2.0.0
 
 * rename isNaN to isNaNCheck

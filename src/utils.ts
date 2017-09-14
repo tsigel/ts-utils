@@ -1,3 +1,4 @@
+import { IPathItem, Path, PATH_TYPE } from './Path';
 import { IFilter } from './filters';
 
 /**
@@ -7,6 +8,7 @@ import { IFilter } from './filters';
 const TYPES = {
     string: '[object String]',
     number: '[object Number]',
+    boolean: '[object Boolean]',
     object: '[object Object]',
     array: '[object Array]'
 };
@@ -81,6 +83,16 @@ export function isArray(param: any): boolean {
 
 /**
  * Check the parameter type
+ * Is the parameter an boolean
+ * @param param
+ * @returns {boolean}
+ */
+export function isBoolean(param: any): boolean {
+    return toString.call(param) === TYPES.boolean;
+}
+
+/**
+ * Check the parameter type
  * Is the parameter an null
  * @param param
  * @returns {boolean}
@@ -117,6 +129,39 @@ export function isNaNCheck(param: any): boolean {
  */
 export function isFunction(param: any): boolean {
     return typeof param === 'function';
+}
+
+/**
+ *
+ * @param param
+ * @returns {TTypes}
+ */
+export function typeOf(param: any): TTypes {
+    const type = typeof param;
+    switch (type) {
+        case 'object':
+            if (param === null) {
+                return 'null';
+            } else {
+                const checkList = [
+                    { check: isArray, type: 'array' },
+                    { check: isObject, type: 'object' },
+                    { check: isString, type: 'string' },
+                    { check: isNumber, type: 'number' },
+                    { check: isBoolean, type: 'boolean' }
+                ];
+                let $type = 'null' as TTypes;
+                checkList.some((item) => {
+                    if (item.check(param)) {
+                        $type = item.type as TTypes;
+                    }
+                    return $type !== 'null';
+                });
+                return $type as TTypes;
+            }
+        default:
+            return type as TTypes;
+    }
 }
 
 /**
@@ -189,18 +234,23 @@ export function splitRange(num: number,
 /**
  * A generic iterator function, which can be used to seamlessly iterate over objects.
  * Like forEach for array
- * @param {T} param
- * @param {IEachCallback<T extends IHash<K>, K>} callback
+ * @param {Array<T> | IHash<T>} param
+ * @param {(data: T, key: (string | number))} callback
  * @param context
  */
-export function each<T extends IHash<K>, K>(param: T, callback: IEachCallback<T, K>, context?: any): void {
-    if (!isObject(param)) {
+export function each<T>(param: Array<T> | IHash<T>,
+                        callback: (data: T, key: string | number) => any,
+                        context?: any): void {
+
+    if (typeof param !== 'object' || !param) {
         return null;
     }
     if (context) {
-        return Object.keys(param).forEach((key: string) => callback.call(context, param[key], key));
+        return Array.isArray(param) ? param.forEach(callback, context) :
+            Object.keys(param).forEach((key: string) => callback.call(context, param[key], key));
     } else {
-        return Object.keys(param).forEach((key: string) => callback(param[key], key));
+        return Array.isArray(param) ? param.forEach(callback) :
+            Object.keys(param).forEach((key: string) => callback(param[key], key));
     }
 }
 
@@ -225,29 +275,20 @@ export function some<T>(param: Object, callback: ISomeCallback<T>): boolean {
  * @param {string} path
  * @returns {T}
  */
-export function get<T>(data: Object, path: string): T {
+export function get<T>(data: object, path: string | Path): T {
     let tmp = data;
-    let resultData = null;
-    const paths = path.split('.').reverse();
+    const parts = isString(path) ? Path.parse(path as string) : path as Path;
 
-    function find(pathPart: string): void {
-        if (pathPart in tmp) {
-            tmp = tmp[pathPart];
+    parts.some((item) => {
+        if (typeof tmp === 'object' && tmp !== null && (item.name in tmp)) {
+            tmp = tmp[item.name];
         } else {
             tmp = null;
+            return true;
         }
-        if (paths.length) {
-            if (tmp) {
-                find(paths.pop());
-            }
-        } else {
-            resultData = tmp;
-        }
-    }
+    });
 
-    find(paths.pop());
-
-    return resultData;
+    return tmp as any;
 }
 
 /**
@@ -261,24 +302,53 @@ export function get<T>(data: Object, path: string): T {
  * @param {string} path
  * @param value
  */
-export function set(data: Object, path: string, value: any): void {
+export function set(data: object, path: string | Path, value: any): void {
     let tmp = data;
-    const paths = path.split('.').reverse();
+    const parts: Path = isString(path) ? Path.parse(path as string) : path as Path;
 
-    function find(pathPart: string): void {
+    parts.forEach((itemData, index) => {
+        const isLast = index === parts.length - 1;
 
-        if (paths.length) {
-            if (!tmp[pathPart]) {
-                tmp[pathPart] = Object.create(null);
-            }
-            tmp = tmp[pathPart];
-            find(paths.pop());
+        if (isLast) {
+            tmp[itemData.name] = value;
         } else {
-            tmp[pathPart] = value;
+            if (typeof tmp[itemData.name] !== 'object') {
+                tmp[itemData.name] = itemData.nextContainer;
+            }
+            tmp = tmp[itemData.name];
         }
-    }
+    });
+}
 
-    find(paths.pop());
+export function getLayers(data: object, path: string | Path): Array<{ name: string, data: any, parent: object }> {
+    let tmp = data;
+    let layers = [{ name: null, data, parent: null }];
+    const parts: Path = isString(path) ? Path.parse(path as string) : path as Path;
+
+    parts.forEach((item) => {
+        if (tmp) {
+            layers.push({ name: item.name, data: tmp[item.name], parent: tmp });
+            tmp = tmp[item.name];
+        } else {
+            layers = null;
+        }
+    });
+
+    return layers;
+}
+
+export function unset(data: object, path: string | Path): void {
+    (getLayers(data, path) || []).reverse().some((item, index): any => {
+        if (index === 0) {
+            if (item.parent) {
+                delete item.parent[item.name];
+            }
+        } else {
+            if (item.parent && Object.keys(item.data).length === 0) {
+                delete item.parent[item.name];
+            }
+        }
+    });
 }
 
 export function result(param: any): any {
@@ -298,15 +368,17 @@ export function result(param: any): any {
  * @param {Object} param
  * @returns {Array<Array<string>>}
  */
-export function getPaths(param: Object): Array<Array<string>> {
+export function getPaths(param: object): Array<Path> {
     const paths = [];
 
-    function getIterate(parents: Array<string>): (value: any, key: string) => void {
+    function getIterate(parents: Array<IPathItem>, array?: boolean): (value: any, key: string) => void {
         const iterate = function (value: any, key: string): void {
             const newLine = parents.slice();
-            newLine.push(key);
+            newLine.push({ type: array ? PATH_TYPE.Array : PATH_TYPE.Object, name: key });
             if (isObject(value)) {
                 each(value, getIterate(newLine));
+            } else if (isArray(value)) {
+                each(value, getIterate(newLine, true));
             } else {
                 paths.push(newLine);
             }
@@ -315,9 +387,68 @@ export function getPaths(param: Object): Array<Array<string>> {
     }
 
     const firstLine = [];
-    each(param, getIterate(firstLine));
+    each(param, getIterate(firstLine, isArray(param)));
 
-    return paths;
+    return paths.map((pathParts) => new Path(pathParts));
+}
+
+export function clone<T>(data: T): T {
+    switch (typeof data) {
+        case 'object':
+            if (data === null) {
+                return null;
+            }
+            if (Array.isArray(data)) {
+                return data.slice() as any;
+            } else {
+                return { ...data as any };
+            }
+        default:
+            return data;
+    }
+}
+
+export function cloneDeep<T>(data: T): T {
+    switch (typeof data) {
+        case 'object':
+            const paths = getPaths(data as any);
+            const $clone = isArray(data) ? [] : Object.create(null);
+
+            paths.forEach((path) => {
+                const value = get(data as any, path);
+                set($clone, path, value);
+            });
+
+            return $clone;
+        default:
+            return data;
+    }
+}
+
+export function merge<T>(origin: Partial<T>, ...args: Array<Partial<T>>): Partial<T> {
+    args.forEach((part) => {
+        const paths = getPaths(part);
+        paths.forEach((path) => {
+            const value = get(part, path);
+            set(origin, path, value);
+        });
+    });
+    return origin;
+}
+
+export function defaults<T extends object>(target: Partial<T>, ...args: Array<Partial<T>>): Partial<T> {
+    const paths = getPaths(target).map(String);
+    args.reverse().forEach((item) => {
+        const itemPaths = getPaths(item);
+        itemPaths.forEach((path) => {
+            const stringPath = path.toString();
+            if (paths.indexOf(stringPath) === -1) {
+                paths.push(stringPath);
+                set(target, path, get(item, path));
+            }
+        });
+    });
+    return target;
 }
 
 export interface ISplitRangeOptions {
@@ -329,10 +460,16 @@ export interface ISomeCallback<T> {
     (data?: T, key?: string): boolean;
 }
 
-export interface IEachCallback<T extends IHash<K>, K> {
-    (data?: K, key?: keyof T): any;
-}
-
 export interface IHash<T> {
     [key: string]: T;
 }
+
+export type TTypes =
+    'string'
+    | 'number'
+    | 'object'
+    | 'function'
+    | 'array'
+    | 'null'
+    | 'undefined'
+    | 'boolean';

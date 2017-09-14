@@ -1,4 +1,4 @@
-import {notContains} from './filters';
+import { notContains } from './filters';
 
 
 export class Signal<T> {
@@ -21,7 +21,7 @@ export class Signal<T> {
 
     public off(handler?: Signal.IHandler<T>): void {
         if (handler) {
-            this._handlers = this._handlers.filter(notContains({handler: handler}));
+            this._handlers = this._handlers.filter(notContains({ handler: handler }));
         } else {
             this._handlers = [];
         }

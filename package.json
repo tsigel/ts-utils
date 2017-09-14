@@ -1,30 +1,32 @@
 {
   "name": "ts-utils",
-  "version": "2.0.4",
+  "version": "4.2.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tsigel/ts-utils.git"
   },
   "scripts": {
-    "build": "sh scripts/build",
-    "compile": "sh scripts/clean && sh scripts/compile",
-    "install_typings": "node node_modules/tsd/build/cli.js install",
-    "init": "sh scripts/postinstall",
+    "build": "npm run clean && npm run compile && npm run browserify && npm run uglify",
+    "clean": "rm -rf ./dist ./coverage ./*.js ./*.map ./*.d.ts src/*.js src/*.d.ts src/*.map test/*.js test/*.map",
+    "compile": "node_modules/typescript/bin/tsc -p ./ && node_modules/typescript/bin/tsc -p ./test && node_modules/typescript/bin/tsc ./karma.conf.ts -m commonjs",
+    "browserify": "node_modules/.bin/ts-bundler --out ./dist/ts-utils.js --file index.ts --main index --standalone ts-utils",
+    "uglify": "node_modules/.bin/uglifyjs ./dist/ts-utils.js -o ./dist/ts-utils.min.js",
     "pretest": "npm run compile",
     "prepublush": "npm run test && npm run build",
-    "postversion": "git push origin HEAD && git push --tags && npm publish",
+    "postversion": "git push origin HEAD && git push --tags && npm run build && npm publish",
     "test": "node_modules/karma/bin/karma start && ./node_modules/.bin/istanbul cover _mocha",
-    "doc": "node_modules/.bin/typedoc --out ./doc --mode file ./src"
+    "test-dev": "npm run pretest && ./node_modules/.bin/istanbul cover _mocha",
+    "test-debug": "node_modules/karma/bin/karma start --singleRun false --autoWatch true"
   },
   "description": "Some utils for array irerate",
-  "main": "dist/utils.js",
+  "main": "dist/ts-utils.min.js",
   "types": "index.d.ts",
   "directories": {
     "test": "test"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.41",
-    "browserify": "^14.4.0",
+    "ts-bundler": "0.0.2",
     "expect.js": "^0.3.1",
     "istanbul": "^0.4.5",
     "karma": "^1.7.0",
@@ -36,11 +38,12 @@
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-prebuilt": "^2.1.14",
     "tslint": "^5.5.0",
-    "typedoc": "^0.7.1",
     "typescript": "^2.4.1",
     "uglify-js": "^3.0.25"
   },
   "author": "Daniil Tsigelnitskiy",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "browserify": "^14.4.0"
+  }
 }
