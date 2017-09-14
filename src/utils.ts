@@ -320,6 +320,33 @@ export function set(data: object, path: string | Path, value: any): void {
     });
 }
 
+export function getLayers(data: object, path: string | Path): Array<{ name: string, data: any, parent: object }> {
+    let tmp = data;
+    const layers = [{ name: null, data, parent: null }];
+    const parts: Path = isString(path) ? Path.parse(path as string) : path as Path;
+
+    parts.forEach((item) => {
+        layers.push({ name: item.name, data: tmp[item.name], parent: tmp });
+        tmp = tmp[item.name];
+    });
+
+    return layers;
+}
+
+export function unset(data: object, path: string | Path): void {
+    getLayers(data, path).reverse().some((item, index): any => {
+        if (index === 0) {
+            if (item.parent) {
+                delete item.parent[item.name];
+            }
+        } else {
+            if (item.parent && Object.keys(item.data).length === 0) {
+                delete item.parent[item.name];
+            }
+        }
+    });
+}
+
 export function result(param: any): any {
     if (isFunction(param)) {
         return param();
