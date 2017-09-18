@@ -351,6 +351,12 @@ export function unset(data: object, path: string | Path): void {
     });
 }
 
+let counter = 0;
+
+export function uniqueId(prefix = '') {
+    return `${prefix}${counter++}`;
+}
+
 export function result(param: any): any {
     if (isFunction(param)) {
         return param();
