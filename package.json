@@ -43,7 +43,5 @@
   },
   "author": "Daniil Tsigelnitskiy",
   "license": "ISC",
-  "dependencies": {
-    "browserify": "^14.4.0"
-  }
+  "dependencies": {}
 }

@@ -25,6 +25,10 @@ export class Path {
         return new Iterator(this._path.map((item, index) => this.getItemData(index)));
     }
 
+    public slice(start: number, end: number): Path {
+        return new Path(this._path.slice(start, end));
+    }
+
     public forEach(cb: (data: IPathData, index?: number) => any, context?: any): void {
         return this._path.forEach((item, index) => {
             cb.call(context, this.getItemData(index), index);
