@@ -43,7 +43,7 @@ export class Receiver {
         for (let i = handlers.length; i--;) {
             if (handlers[i] === handler) {
                 handlers.splice(i, 1);
-                this.__received[(item as Signal<any>).cid].signal.off(handler);
+                this.__received[(item as Signal<any>).cid].signal.off(handler, this);
             }
         }
         if (!handlers.length) {

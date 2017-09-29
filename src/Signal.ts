@@ -26,32 +26,33 @@ export class Signal<T> {
         });
     }
 
-    public off(handler?: Signal.IHandler<T, any>): void {
-        if (handler) {
-            for (let i = this._handlers.length; i--;) {
-                const handlerData = this._handlers[i];
-                if (handlerData.handler === handler) {
-                    this._handlers.splice(i, 1);
-                    if (handlerData.receiver) {
-                        handlerData.receiver.stopReceive(this, handler);
+    public off(handler: Signal.IHandler<T, any>, receiver?: IReceiver): void {
+        for (let i = this._handlers.length; i--;) {
+            const handlerData = this._handlers[i];
+            if (!handlerData) {
+                continue;
+            }
+            if (handlerData.handler === handler) {
+                if (handlerData.receiver) {
+                    if (receiver) {
+                        if (handlerData.receiver === receiver) {
+                            this._handlers.splice(i, 1);
+                            handlerData.receiver.stopReceive(this, handler);
+                        }
+                    } else {
+                        throw new Error('Can\'t remove this handler without receiver!');
                     }
+                } else {
+                    this._handlers.splice(i, 1);
                 }
             }
-        } else {
-            const handlers = this._handlers.slice();
-            this._handlers = [];
-            handlers.forEach((data) => {
-                if (data.receiver) {
-                    data.receiver.stopReceive(this, data.handler);
-                }
-            });
         }
     }
 
     public dispatch(some: T): void {
         this._handlers.slice().forEach((handlerData: Signal.IHandlerData<T, any>) => {
             if (handlerData.isOnce) {
-                this.off(handlerData.handler);
+                this.off(handlerData.handler, handlerData.receiver);
             }
             handlerData.handler.call(handlerData.context, some);
         });

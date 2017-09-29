@@ -80,6 +80,8 @@ describe('Receiver', () => {
             const handler = () => (count++);
 
             receiver.receive(s1, handler);
+            receiver.receive(s1, handler);
+            receiver.receive(s2, handler);
             receiver.receive(s2, handler);
 
             s1.dispatch(null);
@@ -90,7 +92,7 @@ describe('Receiver', () => {
             s1.dispatch(null);
             s2.dispatch(null);
 
-            expect(count).to.be(2);
+            expect(count).to.be(4);
         });
 
         it('stop by handler and signal', () => {
