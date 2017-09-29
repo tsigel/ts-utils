@@ -353,7 +353,7 @@ export function unset(data: object, path: string | Path): void {
 
 let counter = 0;
 
-export function uniqueId(prefix = '') {
+export function uniqueId(prefix: string = '' as string): string {
     return `${prefix}${counter++}`;
 }
 

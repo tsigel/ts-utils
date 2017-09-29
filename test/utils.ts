@@ -263,6 +263,9 @@ describe('utils', () => {
         const arr = [];
         expect(clone(arr)).not.be.equal(arr);
         expect(clone(arr)).to.be.eql(arr);
+        const obj = Object.create(null);
+        expect(clone(obj)).not.be.equal(obj);
+        expect(clone(obj)).to.be.eql(obj);
         const data = { a: {} };
         expect(clone(data)).not.be.equal(data);
         expect(clone(data).a).to.be(data.a);
@@ -277,6 +280,10 @@ describe('utils', () => {
         const data = { a: 1, b: 2, c: 3, arr: [{ a: 1, b: 2 }] };
         expect(cloneDeep(data)).to.be.eql(data);
         expect(cloneDeep(data)).not.be.equal(data);
+        const obj = Object.create(null);
+        expect(cloneDeep(obj)).not.be.equal(obj);
+        expect(cloneDeep(obj)).not.be.equal(null);
+        expect(cloneDeep(obj)).to.be.eql(obj);
     });
 
     it('typeOf', () => {
