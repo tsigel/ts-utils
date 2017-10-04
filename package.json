@@ -25,8 +25,8 @@
     "test": "test"
   },
   "devDependencies": {
+    "@types/expect.js": "^0.3.29",
     "@types/mocha": "^2.2.41",
-    "ts-bundler": "0.0.2",
     "expect.js": "^0.3.1",
     "istanbul": "^0.4.5",
     "karma": "^1.7.0",
@@ -37,6 +37,7 @@
     "phantomjs": "^2.1.7",
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-prebuilt": "^2.1.14",
+    "ts-bundler": "0.0.2",
     "tslint": "^5.5.0",
     "typescript": "^2.4.1",
     "uglify-js": "^3.0.25"

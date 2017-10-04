@@ -5,3 +5,6 @@ export * from './src/utilsWithFilters';
 export * from './src/Path';
 export * from './src/Iterator';
 export * from './src/Receiver';
+export * from './src/tree/BaseTree';
+export * from './src/tree/Tree';
+export * from './src/tree/interface';

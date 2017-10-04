@@ -1,4 +1,4 @@
-import * as expect from 'expect.js';
+import expect = require('expect.js');
 
 export class TestManager {
 

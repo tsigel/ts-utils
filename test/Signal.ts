@@ -1,5 +1,5 @@
-import * as expect from 'expect.js';
-import {Signal} from '../src/Signal';
+import expect = require('expect.js');
+import { Signal } from '../src/Signal';
 
 
 describe('Signal', () => {
