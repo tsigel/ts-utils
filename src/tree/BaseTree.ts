@@ -27,14 +27,30 @@ export class BaseTree<T> {
         }
     }
 
+    public getChildren(): Array<BaseTree<T>> {
+        return this.children || [];
+    }
+
+    public toArray(): Array<BaseTree<T>> {
+        const result = [this as BaseTree<T>];
+        if (this.children) {
+            this.children.forEach((item) => {
+                result.push(...item.toArray());
+            });
+        }
+        return result;
+    }
+
+    public getData(): T {
+        return this.data || Object.create(null);
+    }
+
     public set<K extends keyof T>(key: K, value: T[K]): void {
         this.data[key] = value;
     }
 
     public get<K extends keyof T>(key: K): T[K] {
-        if (this.data) {
-            return this.data[key];
-        }
+        return this.getData()[key];
     }
 
     public getExtended<K extends keyof T>(key: K): T[K] {

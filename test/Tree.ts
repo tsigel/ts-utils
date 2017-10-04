@@ -12,7 +12,9 @@ const TREE = [
         children: [
             {
                 id: 'get_started',
-                noLogin: true
+                data: {
+                    noLogin: true
+                }
             }
         ]
     },
@@ -88,6 +90,31 @@ describe('Tree', () => {
     it('getPath', () => {
         const path = tree.getPath('assets');
         expect(path).to.be.eql(['main', 'wallet', 'assets']);
+    });
+
+    it('getChildren', () => {
+        const children = tree.find('wallet').getChildren();
+        expect(children.length).to.be(2);
+    });
+
+    it('toArray', () => {
+        const array = tree.toArray().map(item => item.id);
+        expect(array).to.be.eql([
+            'root',
+            'welcome',
+            'get_started',
+            'main',
+            'wallet',
+            'assets',
+            'portfolio',
+            'dex'
+        ]);
+    });
+
+    it('where', () => {
+        const noLoginList = tree.where({ noLogin: true });
+        expect(noLoginList.length).to.be(2);
+        expect(noLoginList.map(i => i.id)).to.be.eql(['welcome', 'get_started']);
     });
 
 });

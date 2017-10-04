@@ -1,6 +1,7 @@
-import {BaseTree} from './BaseTree';
-import {IHash} from '../utils';
-import {ITreeData, ITreeOptions} from './interface';
+import { BaseTree } from './BaseTree';
+import { IHash } from '../utils';
+import { ITreeData, ITreeOptions } from './interface';
+import { contains, containsDeep } from '../filters';
 
 export class Tree<T> extends BaseTree<T> {
 
@@ -9,6 +10,16 @@ export class Tree<T> extends BaseTree<T> {
 
     constructor(data: ITreeData<T>, options?: ITreeOptions) {
         super(data, null, options);
+    }
+
+    public where(data: Partial<T>): Array<BaseTree<T>> {
+        const filter = typeof data === 'object' ? containsDeep(data) : contains(data);
+        return Object.keys(this._childHash).reduce((result, item, i) => {
+            if (filter(this._childHash[item].getData() as any)) {
+                result.push(this._childHash[item]);
+            }
+            return result;
+        }, []);
     }
 
     public registerChild(child: BaseTree<T>): void {
