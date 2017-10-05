@@ -1,6 +1,7 @@
 import expect = require('expect.js');
 import { TestManager } from './TestManager';
 import {
+    camelCase,
     clone, cloneDeep,
     each,
     get,
@@ -235,6 +236,12 @@ describe('utils', () => {
 
     it('result', () => {
         expect(result(() => 5)).to.be(result(5));
+    });
+
+    it('camelCase', () => {
+        expect(camelCase('get_started')).to.be('getStarted');
+        expect(camelCase('get started')).to.be('getStarted');
+        expect(camelCase('get-started')).to.be('getStarted');
     });
 
     it('getPaths', () => {

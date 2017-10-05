@@ -457,6 +457,17 @@ export function defaults<T extends object>(target: Partial<T>, ...args: Array<Pa
     return target;
 }
 
+export function camelCase(text: string): string {
+    return text.split(/\W|_/).map((item, index) => {
+        switch (index) {
+            case 0:
+                return item;
+            default:
+                return item.charAt(0).toUpperCase() + item.substr(1);
+        }
+    }).join('');
+}
+
 export interface ISplitRangeOptions {
     nbsp?: boolean;
     separator?: string;
