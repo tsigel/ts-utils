@@ -25,6 +25,15 @@ const EMPTY_FUNCS_MAP = {
     skipUndefined: isUndefined
 };
 
+export function filterList<T>(...filters: Array<IFilter<T, boolean>>): IFilter<T, boolean> {
+    if (!filters.length) {
+        return () => true;
+    }
+    return function (item) {
+        return filters.every((filter) => filter(item));
+    };
+}
+
 export function not<T>(processor?: IProcessor<T>): IFilter<T, boolean> {
     if (processor) {
         return (data: T) => !processor(data);

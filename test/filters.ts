@@ -5,7 +5,7 @@ import {
     containsDeep,
     date as dateFilter,
     empty,
-    equal,
+    equal, filterList,
     not,
     notContains,
     notContainsDeep,
@@ -293,6 +293,19 @@ new TestManager([
 /* tslint:enable */
 
 describe('filters', () => {
+
+    it('filterList', () => {
+
+        const testList = [
+            { type: 'a', subType: 'b', id: 1 },
+            { type: 'a', subType: 'c', id: 2 },
+            { type: 'a', subType: 'b', id: 3 }
+        ];
+
+        const filter = filterList<{ type?: string; subType?: string }>(contains({ type: 'a' }), notContains({ subType: 'c' }));
+        const arr = testList.filter(filter);
+        expect(arr).to.be.eql(testList.filter(contains({ type: 'a' })).filter(notContains({ subType: 'c' })));
+    });
 
     const stamp = 1459603645801;
     const date = new Date(stamp);
