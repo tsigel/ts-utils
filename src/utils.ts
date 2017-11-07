@@ -19,7 +19,7 @@ const TYPES = {
  */
 const toString = Object.prototype.toString;
 
-export let DEFAULT_NUMBER_SEPARATOR = '.';
+export let DEFAULT_NUMBER_SEPARATOR = ',';
 
 /**
  * Check the parameter type
@@ -209,9 +209,9 @@ export function round(num: number, len?: number): number {
  * @param {IFilter<number, number>} processor function for preprocess param
  * @returns {string}
  */
-export function splitRange(num: number,
-                           options?: ISplitRangeOptions,
-                           processor?: IFilter<any, number>): string {
+export function splitRange(num: number | string, separator?: string, processor?: IFilter<string | number, number | string>): string {
+
+    separator = isEmpty(separator) ? DEFAULT_NUMBER_SEPARATOR : separator;
 
     if (processor) {
         num = processor(num);
@@ -222,11 +222,11 @@ export function splitRange(num: number,
         fractional = numData[1];
 
     integral = integral.split('').reverse().join('');
-    integral = integral.replace(/(\d{3})/g, '$1 ')
-        .split('').reverse().join('').replace(/\s/g, options && options.nbsp ? '&nbsp;' : ' ').trim();
+    integral = integral.replace(/(\d{3})/g, `$1${separator}`)
+        .split('').reverse().join('').trim();
 
     if (fractional) {
-        return integral + (options && options.separator || DEFAULT_NUMBER_SEPARATOR) + fractional;
+        return `${integral}.${fractional}`;
     }
     return integral;
 }
@@ -466,11 +466,6 @@ export function camelCase(text: string): string {
                 return item.charAt(0).toUpperCase() + item.substr(1);
         }
     }).join('');
-}
-
-export interface ISplitRangeOptions {
-    nbsp?: boolean;
-    separator?: string;
 }
 
 export interface ISomeCallback<T> {

@@ -238,24 +238,24 @@ new TestManager([
                             {
                                 testName: 'with separator',
                                 testCallback: (data: number) => {
-                                    const filter = splitRangeFilter({ separator: ',' });
-                                    return filter(data) === '1 000,1';
+                                    const filter = splitRangeFilter();
+                                    return filter(data) === '1,000.1';
                                 },
                                 trueValues: [1000.1]
                             },
                             {
                                 testName: 'with nbsp',
                                 testCallback: (data: number) => {
-                                    const filter = splitRangeFilter({ nbsp: true });
-                                    return filter(data) === '1&nbsp;000.1';
+                                    const filter = splitRangeFilter(null, ' ');
+                                    return filter(data) === '1 000.1';
                                 },
                                 trueValues: [1000.1]
                             },
                             {
                                 testName: 'empty options',
                                 testCallback: (data: number) => {
-                                    const filter = splitRangeFilter({});
-                                    return filter(data) === '1 000 000';
+                                    const filter = splitRangeFilter();
+                                    return filter(data) === '1,000,000';
                                 },
                                 trueValues: [1000000]
                             }
@@ -264,8 +264,8 @@ new TestManager([
                     {
                         testName: 'with processor',
                         testCallback: (data: number) => {
-                            const filter = splitRangeFilter(null, (data: number) => round(data, 1));
-                            return filter(data) === '1 000.1';
+                            const filter = splitRangeFilter((data: number) => round(data, 1));
+                            return filter(data) === '1,000.1';
                         },
                         trueValues: [1000.11, 1000.1, 1000.111]
                     },
@@ -273,7 +273,7 @@ new TestManager([
                         testName: 'only number',
                         testCallback: (data: number) => {
                             const filter = splitRangeFilter();
-                            return filter(data) === '1 000';
+                            return filter(data) === '1,000';
                         },
                         trueValues: [1000]
                     }
@@ -283,7 +283,7 @@ new TestManager([
                 testName: 'roundSplit',
                 testCallback: (data: number) => {
                     const filter = roundSplit(3);
-                    return filter(data) === '1 000.111';
+                    return filter(data) === '1,000.111';
                 },
                 trueValues: [1000.1111, 1000.1109, 1000.111]
             }

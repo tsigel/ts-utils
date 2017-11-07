@@ -146,44 +146,39 @@ new TestManager([
                 ]
             },
             {
-                testName: 'splitRangeFilter',
+                testName: 'splitRange',
                 children: [
                     {
-                        testName: 'with options',
-                        children: [
-                            {
-                                testName: 'with separator',
-                                testCallback: (data: number) => {
-                                    return splitRange(data, { separator: ',' }) === '1 000,1';
-                                },
-                                trueValues: [1000.1]
-                            },
-                            {
-                                testName: 'with nbsp',
-                                testCallback: (data: number) => {
-                                    return splitRange(data, { nbsp: true }) === '1&nbsp;000.1';
-                                },
-                                trueValues: [1000.1]
-                            },
-                            {
-                                testName: 'empty options',
-                                testCallback: (data: number) => {
-                                    return splitRange(data, {}) === '1 000 000';
-                                },
-                                trueValues: [1000000]
-                            }
-                        ],
+                        testName: 'without separator',
+                        testCallback: (data: number) => {
+                            return splitRange(data) === '1,000.1';
+                        },
+                        trueValues: [1000.1]
+                    },
+                    {
+                        testName: 'with separator',
+                        testCallback: (data: number) => {
+                            return splitRange(data, ' ') === '1 000 000';
+                        },
+                        trueValues: [1000000]
+                    },
+                    {
+                        testName: 'empty options',
+                        testCallback: (data: number) => {
+                            return splitRange(data) === '1,000,000';
+                        },
+                        trueValues: [1000000]
                     },
                     {
                         testName: 'with processor',
                         testCallback: (data: number) => {
-                            return splitRange(data, null, (data: number) => round(data, 1)) === '1 000.1';
+                            return splitRange(data, null, (data: number) => round(data, 1)) === '1,000.1';
                         },
                         trueValues: [1000.11, 1000.1, 1000.111]
                     },
                     {
                         testName: 'only number',
-                        testCallback: (data: number) => splitRange(data) === '1 000',
+                        testCallback: (data: number) => splitRange(data) === '1,000',
                         trueValues: [1000]
                     }
                 ]

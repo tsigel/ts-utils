@@ -7,7 +7,6 @@ import {
     isNull,
     isNumber,
     isObject,
-    ISplitRangeOptions,
     isString,
     isUndefined,
     numToLength,
@@ -108,14 +107,12 @@ export function roundFilter(len?: number): IFilter<number, number> {
     return (num: number) => round(num, len);
 }
 
-export function splitRangeFilter(data?: ISplitRangeOptions,
-                                 processor?: IFilter<number, number>): IFilter<number, string> {
-
-    return (num: number) => splitRange(num, data, processor);
+export function splitRangeFilter(processor?: IFilter<number | string, number | string>, separator?: string): IFilter<number | string, string> {
+    return (num: number) => splitRange(num, separator, processor);
 }
 
-export function roundSplit(len?: number, data?: ISplitRangeOptions): IFilter<number, string> {
-    return splitRangeFilter(data, roundFilter(len));
+export function roundSplit(len?: number, separator?: string): IFilter<number, string> {
+    return splitRangeFilter(roundFilter(len), separator);
 }
 
 export function equal<T>(some: T, noStrict?: boolean): IFilter<T, boolean> {
