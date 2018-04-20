@@ -1,6 +1,7 @@
-import { Receiver } from '../src/Receiver';
-import { Signal } from '../src/Signal';
+import {Receiver} from '../src/Receiver';
+import {Signal} from '../src/Signal';
 import expect = require('expect.js');
+
 
 describe('Receiver', () => {
 
@@ -36,8 +37,23 @@ describe('Receiver', () => {
         it('all', () => {
 
             let count = 0;
-            const signals = [new Signal(), new Signal(), new Signal()];
+            const signals = [
+                new Signal(),
+                new Signal(),
+                new Signal(),
+                new Signal(),
+                new Signal(),
+                new Signal(),
+                new Signal(),
+                new Signal()
+            ];
 
+            signals.forEach((s) => {
+                receiver.receive(s, () => (count++));
+            });
+            signals.forEach((s) => {
+                receiver.receive(s, () => (count++));
+            });
             signals.forEach((s) => {
                 receiver.receive(s, () => (count++));
             });
@@ -46,7 +62,7 @@ describe('Receiver', () => {
             receiver.stopReceive();
             signals.forEach((s) => s.dispatch(null));
 
-            expect(count).to.be(3);
+            expect(count).to.be(signals.length * 3);
         });
 
         it('stop by signal', () => {

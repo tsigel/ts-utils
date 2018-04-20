@@ -33,7 +33,7 @@ export class Receiver {
             return null;
         }
         if (!handler) {
-            this.__received[(item as Signal<any>).cid].handlers.forEach((myHandler) => {
+            this.__received[(item as Signal<any>).cid].handlers.slice().forEach((myHandler) => {
                 this.stopReceive(item, myHandler);
             });
             return null;
