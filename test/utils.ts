@@ -227,6 +227,8 @@ describe('utils', () => {
         expect(data.a.b.c).to.be(2);
         set(data, 'a.b.c[0]', 3);
         expect(data.a.b.c[0]).to.be(3);
+        set(data, 'e[0][0]', 1);
+        expect(data.e).to.eql([[1]]);
     });
 
     it('result', () => {

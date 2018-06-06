@@ -1,4 +1,4 @@
-import { Iterator } from './Iterator';
+import {Iterator} from './Iterator';
 
 
 export const enum PATH_TYPE {
@@ -55,7 +55,7 @@ export class Path {
     public getItemData(index: number): IPathData {
         const container = Path.getContainer(this._path[index].type);
         const nextContainer = this._path[index + 1] && Path.getContainer(this._path[index + 1].type) || null;
-        return { name: this._path[index].name, container, nextContainer };
+        return {name: this._path[index].name, container, nextContainer};
     }
 
     public static parse(path: string): Path {
@@ -67,25 +67,22 @@ export class Path {
                     key
                 });
             } else {
-                const [name, index] = key.replace(/\[(.*)?\]/, '|$1').split('|');
-                if (name) {
-                    const num = Number(name);
-                    if (String(num) === name) {
-                        parts.push({
-                            type: PATH_TYPE.Array,
-                            name
-                        });
-                    } else {
-                        parts.push({
-                            type: PATH_TYPE.Object,
-                            name
-                        });
-                    }
-                }
-                if (index) {
-                    parts.push({
-                        type: PATH_TYPE.Array,
-                        name: index
+                const names = key.match(/(\w+)|((\w+)\[(\d+)\])/g);
+
+                if (names) {
+                    names.forEach((name) => {
+                        const num = Number(name);
+                        if (String(num) === name) {
+                            parts.push({
+                                type: PATH_TYPE.Array,
+                                name: num
+                            });
+                        } else {
+                            parts.push({
+                                type: PATH_TYPE.Object,
+                                name
+                            });
+                        }
                     });
                 }
             }

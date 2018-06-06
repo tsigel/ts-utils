@@ -13,7 +13,7 @@ import {
     round,
     splitRange
 } from './utils';
-import { Path } from './Path';
+import {Path} from './Path';
 
 
 const EMPTY_FUNCS_MAP = {
@@ -28,7 +28,7 @@ export function filterList<T>(...filters: Array<IFilter<T, boolean>>): IFilter<T
     if (!filters.length) {
         return () => true;
     }
-    return function (item) {
+    return function (item: T) {
         return filters.every((filter) => filter(item));
     };
 }
@@ -68,7 +68,7 @@ export function contains<T>(data: Partial<T>): IFilter<T, boolean> {
             if (!isObject(localData)) {
                 return false;
             }
-            return keys.every((key: keyof T) => data[key] === localData[key]);
+            return keys.every((key: any) => data[key] === localData[key]);
         };
     } else {
         return (localData: T) => {
@@ -107,7 +107,8 @@ export function roundFilter(len?: number): IFilter<number, number> {
     return (num: number) => round(num, len);
 }
 
-export function splitRangeFilter(processor?: IFilter<number | string, number | string>, separator?: string): IFilter<number | string, string> {
+export function splitRangeFilter(processor?: IFilter<number | string, number | string>,
+                                 separator?: string): IFilter<number | string, string> {
     return (num: number) => splitRange(num, separator, processor);
 }
 
