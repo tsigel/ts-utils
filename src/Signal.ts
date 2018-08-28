@@ -26,7 +26,7 @@ export class Signal<T> {
         });
     }
 
-    public off(handler: Signal.IHandler<T, any>, receiver?: IReceiver): void {
+    public off(handler?: Signal.IHandler<T, any>, receiver?: IReceiver): void {
         for (let i = this._handlers.length; i--;) {
             const handlerData = this._handlers[i];
             if (!handlerData) {

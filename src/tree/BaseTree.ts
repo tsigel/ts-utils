@@ -1,4 +1,4 @@
-import { ITreeData, ITreeOptions } from './interface';
+import { ITreeConstructor, ITreeData, ITreeOptions } from './interface';
 import { Tree } from './Tree';
 import { cloneDeep } from '../utils';
 
@@ -8,10 +8,10 @@ export class BaseTree<T> {
     protected children: Array<BaseTree<T>>;
     protected parent: BaseTree<T> | Tree<T>;
     protected data: T;
-    protected ChildConstructor: typeof BaseTree;
+    protected ChildConstructor: ITreeConstructor<T>;
 
 
-    constructor(data: ITreeData<T>, parent?: BaseTree<T> | Tree<T>, options?: ITreeOptions) {
+    constructor(data: ITreeData<T>, parent?: BaseTree<T> | Tree<T>, options?: ITreeOptions<T>) {
         this.children = [];
         this.parent = parent;
         this.id = data.id;

@@ -8,7 +8,7 @@ export class Tree<T> extends BaseTree<T> {
     private _childHash: IHash<BaseTree<T>>;
 
 
-    constructor(data: ITreeData<T>, options?: ITreeOptions) {
+    constructor(data: ITreeData<T>, options?: ITreeOptions<T>) {
         super(data, null, options);
     }
 
