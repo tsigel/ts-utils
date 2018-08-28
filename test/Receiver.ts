@@ -1,5 +1,5 @@
-import {Receiver} from '../src/Receiver';
-import {Signal} from '../src/Signal';
+import { Receiver } from '../src/Receiver';
+import { Signal } from '../src/Signal';
 import expect = require('expect.js');
 
 
@@ -25,6 +25,14 @@ describe('Receiver', () => {
         receiver.receiveOnce(signal, () => (ok++));
         signal.dispatch(null);
         signal.dispatch(null);
+        expect(ok).to.be(1);
+    });
+
+    it('stop receive after listen once', () => {
+        let ok = 0;
+        receiver.receiveOnce(signal, () => (ok++));
+        signal.dispatch(null);
+        receiver.stopReceive(signal);
         expect(ok).to.be(1);
     });
 

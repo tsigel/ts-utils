@@ -16,38 +16,41 @@ export class Receiver {
         receive.call(this, signal, handler, context, true);
     }
 
-    public stopReceive(item?: TStopArg1, handler?: Signal.IHandler<any, any>): void {
+    public stopReceive(arg1?: TStopArg1, arg2?: Signal.IHandler<any, any>): void {
         if (!this.__received) {
             return null;
         }
 
-        if (typeof item === 'function') {
-            handler = item;
-            item = null;
-        }
+        const signal: Signal<any> = isSignal(arg1) ? arg1 : null;
+        const handler: Signal.IHandler<any, any> = (signal ? arg2 : arg1) as Signal.IHandler<any, any>;
 
-        if (!item) {
+        if (!signal) {
             Object.keys(this.__received).forEach((cid) => {
-                this.stopReceive(this.__received[cid].signal, handler);
-            });
-            return null;
-        }
-        if (!handler) {
-            this.__received[(item as Signal<any>).cid].handlers.slice().forEach((myHandler) => {
-                this.stopReceive(item, myHandler);
+                this.stopReceive(this.__received[cid].signal, arg2);
             });
             return null;
         }
 
-        const handlers = this.__received[(item as Signal<any>).cid].handlers;
+        if (!this.__received[signal.cid] || !this.__received[signal.cid].handlers) {
+            return null;
+        }
+
+        if (!handler) {
+            this.__received[signal.cid].handlers.slice().forEach((myHandler) => {
+                this.stopReceive(arg1, myHandler);
+            });
+            return null;
+        }
+
+        const handlers = this.__received[signal.cid].handlers;
         for (let i = handlers.length; i--;) {
-            if (handlers[i] === handler) {
+            if (handlers[i] === arg2) {
                 handlers.splice(i, 1);
-                this.__received[(item as Signal<any>).cid].signal.off(handler, this);
+                this.__received[signal.cid].signal.off(arg2, this);
             }
         }
         if (!handlers.length) {
-            delete this.__received[(item as Signal<any>).cid];
+            delete this.__received[signal.cid];
         }
     }
 
@@ -71,6 +74,10 @@ function receive<T, R>(signal: Signal<T>, handler: Signal.IHandler<T, R>, contex
     } else {
         this.__received[signal.cid].handlers.push(handler);
     }
+}
+
+function isSignal(some: any): some is Signal<any> {
+    return some && (some instanceof Signal);
 }
 
 export interface IReceiver {
