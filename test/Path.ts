@@ -1,6 +1,6 @@
 import expect = require('expect.js');
-import {Path} from '../src/Path';
-import {isArray, isObject} from '../src/utils';
+import { Path } from '../src/Path';
+import { isArray, isObject } from '../src/utils';
 
 
 describe('Path', () => {
@@ -51,6 +51,15 @@ describe('Path', () => {
             expect(isArray(arr1.value.container)).to.be(true);
             expect(arr2.value.name).to.be(0);
             expect(isArray(arr2.value.container)).to.be(true);
+        });
+
+        it('Path from "$"', () => {
+            const path = Path.parse('$');
+            const iterator = path.iterator();
+            let $ = iterator.next();
+            expect($.value.name).to.be.eql('$');
+            $ = iterator.next();
+            expect($.done).to.be.eql(true);
         });
     });
 
