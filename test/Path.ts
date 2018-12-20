@@ -61,6 +61,15 @@ describe('Path', () => {
             $ = iterator.next();
             expect($.done).to.be.eql(true);
         });
+
+        it('Path from "_some"', () => {
+            const path = Path.parse('_some');
+            const iterator = path.iterator();
+            let $ = iterator.next();
+            expect($.value.name).to.be.eql('_some');
+            $ = iterator.next();
+            expect($.done).to.be.eql(true);
+        });
     });
 
 });

@@ -67,7 +67,7 @@ export class Path {
                     key
                 });
             } else {
-                const names = key.match(/([$_]+)|(\w+)|((\w+)\[(\d+)\])/g);
+                const names = key.match(/([\w_$]+)|((\w+)\[(\d+)\])/g);
 
                 if (names) {
                     names.forEach((name) => {
