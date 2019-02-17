@@ -20,7 +20,7 @@
   },
   "description": "Some utils for array irerate",
   "main": "dist/ts-utils.min.js",
-  "types": "index.d.ts",
+  "types": "dist/index.d.ts",
   "directories": {
     "test": "test"
   },

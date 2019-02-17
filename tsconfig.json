@@ -3,12 +3,13 @@
     "noImplicitAny": false,
     "removeComments": true,
     "preserveConstEnums": true,
-    "module": "umd",
+    "module": "commonjs",
     "sourceMap": true,
     "target": "es5",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "declaration": true
+    "declaration": true,
+    "outDir": "dist"
   },
   "include": [
     "index.ts"
