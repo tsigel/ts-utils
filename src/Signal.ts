@@ -7,6 +7,9 @@ export class Signal<T> {
     public cid: string = uniqueId('signal');
     private _handlers: Array<Signal.IHandlerData<T, any>> = [];
 
+    public getListenersCount(): number {
+        return this._handlers.length;
+    }
 
     public on<R>(handler: Signal.IHandler<T, R>, context?: R, receiver?: IReceiver): void {
         this._handlers.push({
